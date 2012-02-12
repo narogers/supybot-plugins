@@ -210,7 +210,7 @@ class Cast(callbacks.Plugin):
     def cast(self, irc, msg, args, channel, work_type, thing):
       """<work-type> <title>
       Cast <title> using information retrieved from Freebase. You must specify the 
-      type of work to be cast. Use the types command to see a list of valid work types."""
+      type of work to be cast. Use the casttypes command to see a list of valid work types."""
 
       random.seed()
       nicks = list(irc.state.channels[channel].users)
