@@ -44,27 +44,69 @@ import urllib
 
 HEADERS = dict(ua = 'Zoia/1.0 (Supybot/0.83; Github Plugin; http://code4lib.org/irc)')
 TMDBK = '2aa9fc67c6ce2fe64313d34806e4f59e'
+
+# To add a new type, simply extend the FREEBASE_TYPES dictionary as follows:
+# [type_name]:
+#   {
+#     'type': [the Freebase type of the thing you're defining],
+#     'subquery': [the sub-query required to get the list of roles],
+#     'extractor': [a function that takes the Freebase response and returns the roles as a flat list of strings]
+#   }
+
 FREEBASE_TYPES = {
-  'movie': {
-    'type': '/film/film',
-    'subquery': { '/film/film/starring': [{'character~=':'.', 'character':None, 'index':None, 'sort': 'index'}] },
-    'extractor': lambda r: [c['character'] for c in r['/film/film/starring']]
-  },
-  'tv': {
-    'type': '/tv/tv_program',
-    'subquery': { 'tv/tv_program/regular_cast': [{'character~=':'.', 'character':None, 'index':None, 'sort': 'index'}] },
-    'extractor': lambda r: [c['character'] for c in r['/tv/tv_program/regular_cast']]
-  },
-  'play': {
-    'type': '/theater/play',
-    'subquery': { 'characters': [] },
-    'extractor': lambda r: r['characters']
-  },
-    'book': {
-    'type': '/book/book',
-    'subquery': { 'characters': [] },
-    'extractor': lambda r: r['characters']
-  }
+  'movie': 
+    {
+      'type': '/film/film',
+      'subquery': { '/film/film/starring': [{'character~=':'.', 'character':None, 'index':None, 'sort': 'index'}] },
+      'extractor': lambda r: [c['character'] for c in r['/film/film/starring']]
+    },
+  'tv': 
+    {
+      'type': '/tv/tv_program',
+      'subquery': 
+        { 
+          '/tv/tv_program/regular_cast': 
+            [{
+              'character~=': '.', 
+              'character':None, 
+              'index': None, 
+              'sort': 'index'
+            }] 
+        },
+      'extractor': lambda r: [c['character'] for c in r['/tv/tv_program/regular_cast']]
+    },
+  'play': 
+    {
+      'type': '/theater/play',
+      'subquery': { 'characters': [] },
+      'extractor': lambda r: r['characters']
+    },
+  'book': 
+    {
+      'type': '/book/book',
+      'subquery': { 'characters': [] },
+      'extractor': lambda r: r['characters']
+    },
+  'opera': 
+    {
+      'type': '/opera/opera',
+      'subquery': 
+        { 
+          '!/opera/opera_character_voice/opera': 
+            [{
+              'type': '/opera/opera_character_voice',
+              'character': None,
+              'voice': None
+            }]
+        },
+      'extractor': lambda r: [('%s (%s)' % (c['character'],c['voice'])) for c in r['!/opera/opera_character_voice/opera']]
+    },
+  'band': 
+    {
+      'type': '/music/musical_group',
+      'subquery': { 'member': [{ 'member' : None, 'role': [] }]},
+      'extractor': lambda r: [(('%s (%s)' % (c['member'],', '.join(c['role']))) if len(c['role'])>0 else c['member']) for c in r['member']]
+    }
 }
 
 class Cast(callbacks.Plugin):
@@ -161,9 +203,14 @@ class Cast(callbacks.Plugin):
             'characters': props['extractor'](result)
           })
 
+    def casttypes(self, irc, msg, args):
+      irc.reply(', '.join(FREEBASE_TYPES.keys()))
+    casttypes = wrap(casttypes)
+    
     def cast(self, irc, msg, args, channel, work_type, thing):
-      """<movie|tv|play|book> <title>
-      Cast <title> using information retrieved from Freebase. You must specify the type of work to be cast."""
+      """<work-type> <title>
+      Cast <title> using information retrieved from Freebase. You must specify the 
+      type of work to be cast. Use the types command to see a list of valid work types."""
 
       random.seed()
       nicks = list(irc.state.channels[channel].users)
