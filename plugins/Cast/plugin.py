@@ -57,8 +57,19 @@ FREEBASE_TYPES = {
   'movie': 
     {
       'type': '/film/film',
-      'subquery': { '/film/film/starring': [{'character~=':'.', 'character':None, 'index':None, 'sort': 'index'}] },
-      'extractor': lambda r: [c['character'] for c in r['/film/film/starring']]
+      'subquery': 
+        { 
+          '/film/film/starring': 
+            [{
+              'optional': 'optional',
+              'character~=':'.', 
+              'character':None, 
+              'index':None, 
+              'sort': 'index'
+            }]
+        },
+      'extractor': lambda r: [c['character'] for c in r['/film/film/starring']],
+      'character_text': 'characters'
     },
   'tv': 
     {
@@ -67,25 +78,29 @@ FREEBASE_TYPES = {
         { 
           '/tv/tv_program/regular_cast': 
             [{
+              'optional': 'optional',
               'character~=': '.', 
               'character':None, 
               'index': None, 
               'sort': 'index'
             }] 
         },
-      'extractor': lambda r: [c['character'] for c in r['/tv/tv_program/regular_cast']]
+      'extractor': lambda r: [c['character'] for c in r['/tv/tv_program/regular_cast']],
+      'character_text': 'characters'
     },
   'play': 
     {
       'type': '/theater/play',
       'subquery': { 'characters': [] },
-      'extractor': lambda r: r['characters']
+      'extractor': lambda r: r['characters'],
+      'character_text': 'characters'
     },
   'book': 
     {
       'type': '/book/book',
       'subquery': { 'characters': [] },
-      'extractor': lambda r: r['characters']
+      'extractor': lambda r: r['characters'],
+      'character_text': 'characters'
     },
   'opera': 
     {
@@ -94,24 +109,28 @@ FREEBASE_TYPES = {
         { 
           '!/opera/opera_character_voice/opera': 
             [{
+              'optional': 'optional',
               'type': '/opera/opera_character_voice',
               'character': None,
               'voice': None
             }]
         },
-      'extractor': lambda r: [('%s (%s)' % (c['character'],c['voice'])) for c in r['!/opera/opera_character_voice/opera']]
+      'extractor': lambda r: [('%s (%s)' % (c['character'],c['voice'])) for c in r['!/opera/opera_character_voice/opera']],
+      'character_text': 'characters'
     },
   'band': 
     {
       'type': '/music/musical_group',
       'subquery': { 'member': [{ 'member' : None, 'role': [] }]},
-      'extractor': lambda r: [(('%s (%s)' % (c['member'],', '.join(c['role']))) if len(c['role'])>0 else c['member']) for c in r['member']]
+      'extractor': lambda r: [(('%s (%s)' % (c['member'],', '.join(c['role']))) if len(c['role'])>0 else c['member']) for c in r['member']],
+      'character_text': 'members'
     },
   'battle':
     {
       'type': '/military/military_conflict',
-      'subquery': { 'commanders': [{ 'military_commander': None} ] },
-      'extractor': lambda r: [c['military_commander'] for c in r['commanders']]
+      'subquery': { 'commanders': [{ 'optional': 'optional', 'military_commander': None }] },
+      'extractor': lambda r: [c['military_commander'] for c in r['commanders']],
+      'character_text': 'commanders'
     }
 }
 
@@ -204,6 +223,7 @@ class Cast(callbacks.Plugin):
           return None
         else:
           return({
+            'props': props,
             'url': "http://www.freebase.com" + result['id'],
             'title': result['name'],
             'characters': props['extractor'](result)
@@ -218,6 +238,10 @@ class Cast(callbacks.Plugin):
       Cast <title> using information retrieved from Freebase. You must specify the 
       type of work to be cast. Use the casttypes command to see a list of valid work types."""
 
+      if work_type not in FREEBASE_TYPES.keys():
+        irc.reply('"%s" is not a valid type. Please select one of the following: %s' % (work_type, ', '.join(FREEBASE_TYPES.keys())))
+        return False
+        
       random.seed()
       nicks = list(irc.state.channels[channel].users)
       random.shuffle(nicks)      
@@ -229,7 +253,7 @@ class Cast(callbacks.Plugin):
         parts = record['characters']
 
         if len(parts) == 0:
-          irc.reply('I found a %s called "%s", but there are no characters listed. %s' % (work_type, thing, record['url']))
+          irc.reply('I found a %s called "%s", but there are no %s listed. %s' % (work_type, record['title'], record['props']['character_text'], record['url']))
         elif len(parts) > len(nicks):
           irc.reply('Not enough people in %s to cast "%s"' % (channel, title))
         else:
