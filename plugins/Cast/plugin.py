@@ -106,6 +106,12 @@ FREEBASE_TYPES = {
       'type': '/music/musical_group',
       'subquery': { 'member': [{ 'member' : None, 'role': [] }]},
       'extractor': lambda r: [(('%s (%s)' % (c['member'],', '.join(c['role']))) if len(c['role'])>0 else c['member']) for c in r['member']]
+    },
+  'battle':
+    {
+      'type': '/military/military_conflict',
+      'subquery': { 'commanders': [{ 'military_commander': None} ] },
+      'extractor': lambda r: [c['military_commander'] for c in r['commanders']]
     }
 }
 
