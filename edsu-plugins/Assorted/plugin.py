@@ -7,6 +7,7 @@ import random
 import re
 import simplejson
 import time
+import lxml
 from os.path import join, abspath, dirname
 from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup, StopParsing
 from cgi import parse_qs
@@ -972,6 +973,23 @@ class Assorted(callbacks.Privmsg):
         data = doc.read()
         soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
         return soup
+
+    def coffee(self, irc, msg, args):
+        """
+        makes and pours a sensational cup of coffee from the highest rated
+        coffees at ttp://www.coffeereview.com/allreviews.cfm?search=1
+        """
+        f = join(dirname(abspath(__file__)), 'coffee.html')
+        data = open(f).read()
+        root = lxml.html.soupparser.fromstring(data, convertEntities=False)
+        nodes = root.xpath('//div[@class="review_general2"]//h3')
+        coffees = [x.text_content() for x in nodes]
+        coffee = coffees[randint(0, len(coffees))]
+        if len(args) > 0:
+            nick = ' '.join(args)
+        else:
+            nick = msg.nick
+        irc.reply("brews and pours a cup of %s, and sends it sliding down the bar to %s" % (coffee, nick), action=True)
 
     def bartender(self, irc, msg, args):
         """
