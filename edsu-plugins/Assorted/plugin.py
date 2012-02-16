@@ -1827,5 +1827,10 @@ class Assorted(callbacks.Privmsg):
       """1% of <this> controls 99% of <that>"""
       irc.reply(("1%% of the %s control 99%% of the %s" % (this, that)).encode('utf8'), prefixNick=False)
     occupy=wrap(occupy,['something','something'])
+
+    def bitch(self, irc, msg, args, what):
+      """It's a plugin, bitches!"""
+      irc.reply(u'%s, bitches!' % re.sub(r'[.!?,;:]+$','',what))
+    bitch=wrap(bitch,['text'])
     
 Class = Assorted
