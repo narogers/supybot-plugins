@@ -13,7 +13,7 @@ from cgi import parse_qs
 from datetime import date, datetime
 from elementtidy import TidyHTMLTreeBuilder
 from int2word import int2word
-from random import randint
+from random import randint, choice
 from urllib import quote, urlencode
 from urllib2 import urlopen, urlparse, Request, build_opener, HTTPError
 from urlparse import urlparse
@@ -1433,17 +1433,16 @@ class Assorted(callbacks.Privmsg):
     pony = wrap(pony, [optional('text')])
 
     def _random_nick(self, irc, msg, args, channel):
-  		# Modified from Channel.nicks
-  		#
-      # Make sure we don't elicit information about private channels to
-      # people or channels that shouldn't know
-      if 's' in irc.state.channels[channel].modes and \
-          msg.args[0] != channel and \
-          (ircutils.isChannel(msg.args[0]) or \
-           msg.nick not in irc.state.channels[channel].users):
-          irc.error('You don\'t have access to that information.')
-      L = list(irc.state.channels[channel].users)
-      return(L[randint(0, len(L)-1)])
+        # Modified from Channel.nicks
+        #
+        # Make sure we don't elicit information about private channels to
+        # people or channels that shouldn't know
+        if 's' in irc.state.channels[channel].modes and \
+               msg.args[0] != channel and \
+               (ircutils.isChannel(msg.args[0]) or \
+                msg.nick not in irc.state.channels[channel].users):
+            irc.error("You don't have access to that information.")
+        return choice(irc.state.channels[channel].users.keys())
 
     def someone(self, irc, msg, args, channel):
         """[<channel>]
@@ -1566,12 +1565,12 @@ class Assorted(callbacks.Privmsg):
       irc.reply(fact.encode('utf-8'), prefixNick=True)
       
     def arch(self, irc, msg, args, thing):
-      if thing is None:
-        irc.reply('pulls string...', action=True, prefixNick=False)
-        irc.reply('THE ARCHITECT SAYS...BLAH BLAH BLAH BLAH BLAH.', prefixNick=False)
-      else:
-        irc.reply('THE ARCHITECT ' + thing.upper().encode('utf-8'), prefixNick=False)
-        
+        """THE ARCHITECT SAYS THINGS"""
+        if thing is None:
+            irc.reply('pulls string...', action=True, prefixNick=False)
+            irc.reply('THE ARCHITECT SAYS...BLAH BLAH BLAH BLAH BLAH.', prefixNick=False)
+        else:
+            irc.reply('THE ARCHITECT ' + thing.upper().encode('utf-8'), prefixNick=False)
     arch = wrap(arch, [optional('text')])
 
     def beck(self, irc, msg, args):
