@@ -8,7 +8,7 @@ import re
 import simplejson
 import time
 from os.path import join, abspath, dirname
-from BeautifulSoup import BeautifulSoup, StopParsing
+from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup, StopParsing
 from cgi import parse_qs
 from datetime import date, datetime
 from elementtidy import TidyHTMLTreeBuilder
@@ -100,7 +100,7 @@ class Assorted(callbacks.Privmsg):
         results = self.get_votes(120)
         irc.reply('; '.join(results).encode('utf8'))
 
-    def keynotes2012(self,irc,msg,args):
+    def keynotes2013(self,irc,msg,args):
       """votes for the 2011 code4libcon keynote 
       """
       keynotes = [
@@ -189,6 +189,12 @@ class Assorted(callbacks.Privmsg):
             break
         return results
 
+    def twss(self, irc, msg, args):
+        html = urlopen("http://thatswutshesaid.com/").read()
+        soup = BeautifulSoup(html)
+        twss = soup.find("h1")
+        irc.reply(twss.string.encode('utf8'))
+        
     def penny(self, irc, msg, args):
         html = urlopen("http://www.penny-arcade.com/archive/").read()
         soup = BeautifulSoup(html)
@@ -1009,6 +1015,30 @@ class Assorted(callbacks.Privmsg):
 
     whiskey = whisky  
     
+    def swill(self, irc, msg, args):
+      """
+      pours...something else.
+      """
+      catalog = [
+        ["forty of", ["Colt 45", "Camo 40", "Black Fist", "Country Club", "Olde English 800", "Mickey's", "Black Bull", 
+          "Labatt Blue Dry 7.1", "WildCat", "Molson Dry 6.5/7.5/8.5/10.1", "Private Stock", "Big Bear", "St. Ides", 
+          "Steel Reserve 211", "B40 Bull Max", "King Cobra", "Jeremiah Weed", "Hurricane"]],
+        ["bottle of", ["Zima", "Extra Dry Champale", "Pink Champale", "Golden Champale"]],
+        ["can of Sparks", ["", "Light","Plus","Red","Stinger"]],
+        ["bottle of Smirnoff Ice", ["Watermelon","Wild Grape","Passionfruit","Mango","Triple Black","Pomegranate Fusion",
+          "Arctic Berry", "Green Apple Bite","Strawberry Acai","Pineapple","Raspberry Burst"]]
+      ]
+      menu = []
+      package,options = catalog[randint(0, len(catalog)-1)]
+      for option in options:
+        menu.append(('%s %s' % (package, option)).strip())
+      if len(args) > 0:
+        nick = ' '.join(args)
+      else:
+        nick = msg.nick
+      order = menu[randint(0, len(menu)-1)]
+      irc.reply("grabs a %s and sends it sliding down the bar to %s" % (order, nick), action=True)
+      
     def anon(self, irc, msg, args):
         """
         Spits out random nonsense from 'anon,' that loveable idiot of a troll
@@ -1043,11 +1073,12 @@ class Assorted(callbacks.Privmsg):
 
     def _diebold_tallies(self, tally='', year=''):
         """ Gets a tally from the diebold-o-tron """
-        base_url = 'http://vote.code4lib.org/election/results/'
+        base_url = 'http://vote.code4lib.org/election/'
         tallies = {
             'keynotes': {'2009': '4',
                          '2010': '11',
-                         '2011': '16'},
+                         '2011': '16',
+                         '2012': '20'},
             'necode4lib': {'2008': '5'},
             'tshirts': {'2009': '8',
 	    	        '2010': '14',
@@ -1058,15 +1089,16 @@ class Assorted(callbacks.Privmsg):
             'talks': {'2008': '2', 
                       '2009': '7',
                       '2010': '13',
-                      '2011': '17'},
+                      '2011': '17',
+                      '2012': '21'},
             'logo': {'2008': '6'}
         }
         try:
             poll_number = tallies[tally][year]
         except KeyError:
             raise PollNotFoundException("tally or year not found")
-        poll_url = base_url + poll_number
-        vote_url = poll_url.replace('results', 'index')
+        poll_url = base_url + 'results/' + poll_number
+        vote_url = base_url + poll_number 
         from socket import setdefaulttimeout
         setdefaulttimeout(60)
         try:
@@ -1081,6 +1113,18 @@ class Assorted(callbacks.Privmsg):
         votes.sort(cmp=lambda x,y: int(y['score'])-int(x['score']))
         tallies = [(vote['title'], vote['score']) for vote in votes]
         return tallies, vote_url
+
+    def talks2012(self, irc, msg, args):
+        """ 
+        Gets tally of talk votes for 2012 conference
+        """
+        try:
+            tallies, vote_url = self._diebold_tallies("talks", "2012")
+        except PollNotFoundException, pnfe:
+            irc.reply("Poll not found for talk votes in 2012: %s" % pnfe)
+        else:
+            irc.reply(('; '.join("%s [%s]" % t for t in tallies)).encode('utf-8'))
+            irc.reply("Voting link: %s" % vote_url)
 
     def talks2011(self, irc, msg, args):
         """ 
@@ -1257,6 +1301,18 @@ class Assorted(callbacks.Privmsg):
             irc.reply(('; '.join("%s [%s]" % t for t in tallies)).encode('utf-8'))
             irc.reply("Have you voted? %s" % vote_url)
 
+    def keynotes2012(self, irc, msg, args):
+        """ 
+        Gets tally of keynoter votes for 2012 conference
+        """
+        try:
+            tallies, vote_url = self._diebold_tallies("keynotes", "2012")
+        except PollNotFoundException, pnfe:
+            irc.reply("Poll not found for keynotes in 2012: %s" % pnfe)
+        else:
+            irc.reply(('; '.join("%s [%s]" % t for t in tallies)).encode('utf-8'))
+            irc.reply("Have you voted? %s" % vote_url)
+
     #def hosts2013(self, irc, msg, args):
     #  irc.reply("I'm sorry. That request involves dates after December 21, 2012, and is therefore not worth any of my precious remaining time.")
       
@@ -1392,10 +1448,17 @@ class Assorted(callbacks.Privmsg):
         url = 'http://www.computerhistory.org/tdih'
         soup = self._url2soup(url)
         try:
-            txt = unicode(soup.find('div', id='tdihbody').findAll('p')[1].string)
+            # kinda fragile, but whatevs
+            h3 = soup.find('h3')
+            date = h3.string
+            title = h3.nextSibling.nextSibling.string
+            text = h3.nextSibling.nextSibling.nextSibling.nextSibling.string
+            msg = "[%s] %s - %s" % (date, title, text)
         except RuntimeError, e:
-            txt = "d'oh something is b0rk3n: %s" % e
-        irc.reply(txt.encode('utf-8'))
+            msg = "d'oh something is b0rk3n: %s" % e
+        irc.reply(msg.encode('utf-8'))
+
+    history = tdih
 
     def snow(self, irc, msg, args):
         flake = """
@@ -1712,5 +1775,38 @@ class Assorted(callbacks.Privmsg):
     
         irc.reply(text, prefixNick=True)
 
+    def quakes(self, irc, msg, args, opts, loc):
+      """[--min <magnitude>] [<location>]
+      List recent earthquakes (optionally near <location>, with magnitude >= <magnitude> [default: 3.5]) from the USGS Atom feed"""
+      url = "http://quakes.heroku.com/catalogs/7day-M2.5.json"
+      minq = 3.5
+      for (opt, arg) in opts:
+        if opt == 'min':
+          minq = arg
+      
+      if (loc != None):
+        pref = 'Closest quakes (>=%.2f) to %s in the past 7 days: ' % (minq,loc)
+        url = url + ("?sort=distance&from=%s" % (loc))
+      else:
+        pref = 'Quakes (>=%.2f) in the past 7 days: ' % (minq)
+        
+      json = urlopen(url).read()
+      feed = simplejson.loads(json)
+      responses = []
+      for q in feed:
+        if q['magnitude'] >= minq:
+          if loc != None:
+            s = "%.2f, %.1fmi away (%s, %s ago)" % (q['magnitude'], q['distance']['mi'], q['location'], q['age']['string'])
+          else:
+            s = "%.2f, %s (%s ago)" % (q['magnitude'], q['location'], q['age']['string'])
+          responses.append(s)
+        
+      irc.reply(pref + '; '.join(responses))
+    quakes=wrap(quakes,[getopts({'min':'float'}), optional('text')])
 
+    def occupy(self, irc, msg, args, this, that):
+      """1% of <this> controls 99% of <that>"""
+      irc.reply(("1%% of the %s control 99%% of the %s" % (this, that)).encode('utf8'), prefixNick=False)
+    occupy=wrap(occupy,['something','something'])
+    
 Class = Assorted
