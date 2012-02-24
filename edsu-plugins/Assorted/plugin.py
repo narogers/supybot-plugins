@@ -195,7 +195,20 @@ class Assorted(callbacks.Privmsg):
         soup = BeautifulSoup(html)
         twss = soup.find("h1")
         irc.reply(twss.string.encode('utf8'))
-        
+
+    def foodholiday(self, irc, msg, args):
+        datestring = time.strftime('%B %d', time.localtime())
+        datere = re.compile('^'+datestring+'\\b')
+        html = urlopen("http://www.tfdutch.com/foodh.htm").read()
+        soup = BeautifulSoup(html)
+        matches = soup.findAll(text = re.compile(datere))
+        holidays = [match.parent.parent.parent.find('a').string for match in matches]
+        if len(holidays) > 0:
+          response = "%s: %s" % (datestring, ', '.join(holidays))
+        else:
+          response = "No food holidays found for %s" % datestring
+        irc.reply(response)
+      
     def penny(self, irc, msg, args):
         html = urlopen("http://www.penny-arcade.com/archive/").read()
         soup = BeautifulSoup(html)
