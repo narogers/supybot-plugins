@@ -54,6 +54,9 @@ TMDBK = '2aa9fc67c6ce2fe64313d34806e4f59e'
 #   }
 
 FREEBASE_TYPES = {
+  'channel': {
+    'character_text': 'members'
+  },
   'movie': 
     {
       'type': '/film/film',
@@ -237,17 +240,31 @@ class Cast(callbacks.Plugin):
       """<work-type> <title>
       Cast <title> using information retrieved from Freebase. You must specify the 
       type of work to be cast. Use the casttypes command to see a list of valid work types."""
-
+      
       if work_type not in FREEBASE_TYPES.keys():
         irc.reply('"%s" is not a valid type. Please select one of the following: %s' % (work_type, ', '.join(FREEBASE_TYPES.keys())))
         return False
         
       random.seed()
       nicks = list(irc.state.channels[channel].users)
-      random.shuffle(nicks)      
-      record = self._query_freebase(work_type, thing)
+      random.shuffle(nicks)
+      
+      record = None
+      if work_type == 'channel':
+        if thing in irc.state.channels:
+          record = {
+            'title': thing,
+            'characters': list(irc.state.channels[thing].users)
+          }
+      else:
+        record = self._query_freebase(work_type, thing)
+        
       if record is None:
-        irc.reply('I can\'t find a %s called "%s" in Freebase!' % (work_type, thing))
+        if work_type == 'channel':
+          source = 'Freenode'
+        else:
+          source = 'Freebase'
+        irc.reply('I can\'t find a %s called "%s" in %s!' % (work_type, thing, source))
       else:
         title = record['title']
         parts = record['characters']
