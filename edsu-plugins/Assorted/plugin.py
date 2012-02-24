@@ -1536,7 +1536,7 @@ class Assorted(callbacks.Privmsg):
                (ircutils.isChannel(msg.args[0]) or \
                 msg.nick not in irc.state.channels[channel].users):
             irc.error("You don't have access to that information.")
-        return choice(irc.state.channels[channel].users.keys())
+        return choice(list(irc.state.channels[channel].users))
 
     def someone(self, irc, msg, args, channel):
         """[<channel>]
