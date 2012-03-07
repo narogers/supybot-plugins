@@ -7,13 +7,14 @@ import random
 import re
 import simplejson
 import time
+import lxml
 from os.path import join, abspath, dirname
 from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup, StopParsing
 from cgi import parse_qs
 from datetime import date, datetime
 from elementtidy import TidyHTMLTreeBuilder
 from int2word import int2word
-from random import randint
+from random import randint, choice
 from urllib import quote, urlencode
 from urllib2 import urlopen, urlparse, Request, build_opener, HTTPError
 from urlparse import urlparse
@@ -194,7 +195,7 @@ class Assorted(callbacks.Privmsg):
         soup = BeautifulSoup(html)
         twss = soup.find("h1")
         irc.reply(twss.string.encode('utf8'))
-    
+
     def luther(self, irc, msg, args):
         """Insults from Martin Luther, from http://ergofabulous.org/luther/"""
         html = urlopen("http://ergofabulous.org/luther/").read()
@@ -202,6 +203,19 @@ class Assorted(callbacks.Privmsg):
         luther = soup.find("p", {"class": "larger"})
         irc.reply(luther.string.encode('utf8'))
         
+    def foodholiday(self, irc, msg, args):
+        datestring = time.strftime('%B %d', time.localtime())
+        datere = re.compile('^'+datestring+'\\b')
+        html = urlopen("http://www.tfdutch.com/foodh.htm").read()
+        soup = BeautifulSoup(html)
+        matches = soup.findAll(text = re.compile(datere))
+        holidays = [match.parent.parent.parent.find('a').string for match in matches]
+        if len(holidays) > 0:
+          response = "%s: %s" % (datestring, ', '.join(holidays))
+        else:
+          response = "No food holidays found for %s" % datestring
+        irc.reply(response)
+      
     def penny(self, irc, msg, args):
         html = urlopen("http://www.penny-arcade.com/archive/").read()
         soup = BeautifulSoup(html)
@@ -980,6 +994,23 @@ class Assorted(callbacks.Privmsg):
         soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
         return soup
 
+    def coffee(self, irc, msg, args):
+        """
+        makes and pours a sensational cup of coffee from the highest rated
+        coffees at ttp://www.coffeereview.com/allreviews.cfm?search=1
+        """
+        f = join(dirname(abspath(__file__)), 'coffee.html')
+        data = open(f).read()
+        root = lxml.html.soupparser.fromstring(data, convertEntities=False)
+        nodes = root.xpath('//div[@class="review_general2"]//h3')
+        coffees = [x.text_content() for x in nodes]
+        coffee = coffees[randint(0, len(coffees))]
+        if len(args) > 0:
+            nick = ' '.join(args)
+        else:
+            nick = msg.nick
+        irc.reply("brews and pours a cup of %s, and sends it sliding down the bar to %s" % (coffee, nick), action=True)
+
     def bartender(self, irc, msg, args):
         """
         pours a beer from an archived copy of
@@ -1503,17 +1534,16 @@ class Assorted(callbacks.Privmsg):
     pony = wrap(pony, [optional('text')])
 
     def _random_nick(self, irc, msg, args, channel):
-  		# Modified from Channel.nicks
-  		#
-      # Make sure we don't elicit information about private channels to
-      # people or channels that shouldn't know
-      if 's' in irc.state.channels[channel].modes and \
-          msg.args[0] != channel and \
-          (ircutils.isChannel(msg.args[0]) or \
-           msg.nick not in irc.state.channels[channel].users):
-          irc.error('You don\'t have access to that information.')
-      L = list(irc.state.channels[channel].users)
-      return(L[randint(0, len(L)-1)])
+        # Modified from Channel.nicks
+        #
+        # Make sure we don't elicit information about private channels to
+        # people or channels that shouldn't know
+        if 's' in irc.state.channels[channel].modes and \
+               msg.args[0] != channel and \
+               (ircutils.isChannel(msg.args[0]) or \
+                msg.nick not in irc.state.channels[channel].users):
+            irc.error("You don't have access to that information.")
+        return choice(list(irc.state.channels[channel].users))
 
     def someone(self, irc, msg, args, channel):
         """[<channel>]
@@ -1636,12 +1666,12 @@ class Assorted(callbacks.Privmsg):
       irc.reply(fact.encode('utf-8'), prefixNick=True)
       
     def arch(self, irc, msg, args, thing):
-      if thing is None:
-        irc.reply('pulls string...', action=True, prefixNick=False)
-        irc.reply('THE ARCHITECT SAYS...BLAH BLAH BLAH BLAH BLAH.', prefixNick=False)
-      else:
-        irc.reply('THE ARCHITECT ' + thing.upper().encode('utf-8'), prefixNick=False)
-        
+        """THE ARCHITECT SAYS THINGS"""
+        if thing is None:
+            irc.reply('pulls string...', action=True, prefixNick=False)
+            irc.reply('THE ARCHITECT SAYS...BLAH BLAH BLAH BLAH BLAH.', prefixNick=False)
+        else:
+            irc.reply('THE ARCHITECT ' + thing.upper().encode('utf-8'), prefixNick=False)
     arch = wrap(arch, [optional('text')])
 
     def beck(self, irc, msg, args):
@@ -1816,5 +1846,10 @@ class Assorted(callbacks.Privmsg):
       """1% of <this> controls 99% of <that>"""
       irc.reply(("1%% of the %s control 99%% of the %s" % (this, that)).encode('utf8'), prefixNick=False)
     occupy=wrap(occupy,['something','something'])
+
+    def bitch(self, irc, msg, args, what):
+      """It's a plugin, bitches!"""
+      irc.reply(u'%s, bitches!' % re.sub(r'[.!?,;:]+$','',what))
+    bitch=wrap(bitch,['text'])
     
 Class = Assorted
