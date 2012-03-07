@@ -194,6 +194,13 @@ class Assorted(callbacks.Privmsg):
         soup = BeautifulSoup(html)
         twss = soup.find("h1")
         irc.reply(twss.string.encode('utf8'))
+    
+    def luther(self, irc, msg, args):
+        """Insults from Martin Luther, from http://ergofabulous.org/luther/"""
+        html = urlopen("http://ergofabulous.org/luther/").read()
+        soup = BeautifulSoup(html)
+        luther = soup.find("p", {"class": "larger"})
+        irc.reply(luther.string.encode('utf8'))
         
     def penny(self, irc, msg, args):
         html = urlopen("http://www.penny-arcade.com/archive/").read()
