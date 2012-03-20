@@ -1574,7 +1574,16 @@ class Assorted(callbacks.Privmsg):
       
     who = wrap(who, ['inChannel', 'text'])
 
-    
+    def whose(self, irc, msg, args, channel, question):
+      subject = self._random_nick(irc, msg, args, channel)
+      predicate = re.sub("[^A-Za-z0-9]+$",'',question)
+      predicate = re.sub("\\b(your?|me|my)\\b",self._personalize,predicate)
+      predicate = re.sub("\\$whose",subject + "'s",predicate)
+      predicate = re.sub("\\$who",subject,predicate)
+      irc.reply("%s's %s" % (subject, predicate), prefixNick=False)
+      
+    whose = wrap(whose, ['inChannel', 'text'])
+
     def compliment(self, irc, msg, args, who):
         """[<who>]
         
