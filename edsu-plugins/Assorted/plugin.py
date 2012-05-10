@@ -14,7 +14,7 @@ from cgi import parse_qs
 from datetime import date, datetime
 from elementtidy import TidyHTMLTreeBuilder
 from int2word import int2word
-from random import randint, choice
+from random import randint, choice, seed
 from urllib import quote, urlencode
 from urllib2 import urlopen, urlparse, Request, build_opener, HTTPError
 from urlparse import urlparse
@@ -932,6 +932,11 @@ class Assorted(callbacks.Privmsg):
           if opt == 'raw':
             prefix = ""
             
+        seed_val = 0
+        for char in choices:
+          seed_val += ord(char)
+        seed(seed_val)
+
         pattern = re.compile('\s+or\s+', re.I)
         clist = re.split(pattern, choices)
         if randint(0, 10) == 0:
