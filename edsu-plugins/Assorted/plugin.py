@@ -944,6 +944,8 @@ class Assorted(callbacks.Privmsg):
             return
         irc.reply(prefix + clist[randint(0, len(clist)-1)])
 
+        seed()
+
     decide = wrap(decide, [getopts({'raw':''}),'text'])
 
     def should(self, irc, msg, args, name, choices):
