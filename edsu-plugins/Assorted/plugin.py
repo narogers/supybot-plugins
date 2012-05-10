@@ -932,10 +932,7 @@ class Assorted(callbacks.Privmsg):
           if opt == 'raw':
             prefix = ""
             
-        seed_val = 0
-        for char in choices:
-          seed_val += ord(char)
-        seed(seed_val)
+        seed(choices)
 
         pattern = re.compile('\s+or\s+', re.I)
         clist = re.split(pattern, choices)
