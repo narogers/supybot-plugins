@@ -7,7 +7,7 @@ from lxml.html import iterlinks, fromstring
 
 class UnglueIt(callbacks.Privmsg):
 
-    def unglueing(self, irc, msg, args, question):
+    def unglueing(self, irc, msg, args):
         """See how UnglueIt campaigns are faring
         """
         html = urllib.urlopen("https://unglue.it/campaigns/ending").read()
