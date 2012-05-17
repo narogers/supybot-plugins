@@ -3,7 +3,7 @@ import supybot.callbacks as callbacks
 
 import urllib
 
-from lxml.html import iterlinks, fromstring
+from lxml.html import fromstring
 
 class UnglueIt(callbacks.Privmsg):
 
@@ -15,12 +15,9 @@ class UnglueIt(callbacks.Privmsg):
         result = []
 
         for div in doc.xpath('.//div[@class="listview book-list"]'):
-            title = d.xpath('string(.//div[@class="title"])').strip()
+            title = div.xpath('string(.//div[@class="title"])').strip()
             current, goal = [e.text for e in div.xpath(".//span/b")]
             result.append("%s - %s/%s" % (title, current, goal))
         irc.reply(" ; ".join(result))
-
-    unglueing = wrap(unglueing, ['text'])
-
 
 Class = UnglueIt
