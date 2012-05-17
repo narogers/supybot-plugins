@@ -17,7 +17,7 @@ class UnglueIt(callbacks.Privmsg):
         for div in doc.xpath('.//div[@class="listview book-list"]'):
             title = d.xpath('string(.//div[@class="title"])').strip()
             current, goal = [e.text for e in div.xpath(".//span/b")]
-            result.append("%s - %s/%s" % (title, current, goal)
+            result.append("%s - %s/%s" % (title, current, goal))
         irc.reply(" ; ".join(result))
 
     alpha = wrap(unglueing, ['text'])
