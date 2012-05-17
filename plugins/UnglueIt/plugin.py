@@ -20,7 +20,7 @@ class UnglueIt(callbacks.Privmsg):
             result.append("%s - %s/%s" % (title, current, goal))
         irc.reply(" ; ".join(result))
 
-    alpha = wrap(unglueing, ['text'])
+    unglueing = wrap(unglueing, ['text'])
 
 
 Class = UnglueIt
