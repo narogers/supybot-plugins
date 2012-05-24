@@ -544,6 +544,17 @@ class Assorted(callbacks.Privmsg):
         html_str = html.read()
         soup = BeautifulSoup(html_str)
         irc.reply(soup.find('h2').string.strip().upper())
+    
+    def wodehouse(self,irc,msg,args):
+        """grabs a p.g. wodehouse quote from http://www.drones.com/pgw.cgi"""
+        url = 'http://www.drones.com/pgw.cgi'
+        ua = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.11) Gecko/20071204 Ubuntu/7.10 (gutsy) Firefox/2.0.0.11'
+        opener = build_opener()
+        opener.addheaders = [('User-Agent', ua)]
+        html = opener.open(url)
+        html_str = html.read()
+        soup = BeautifulSoup(html_str)
+        irc.reply(soup.find('blockquote').next.replace("\n"," ").strip())
 
     def get_text(self,e):
         string = ''
