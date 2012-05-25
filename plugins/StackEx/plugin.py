@@ -31,14 +31,14 @@ class StackEx(callbacks.Plugin):
                 n = ["%s <%s>" % (q.title, q.url) for q in questions]
                 irc.reply('new library questions: ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
 
-    def last_question(self, irc, msg, args):
+    def lastq(self, irc, msg, args):
         """returns the last libraries stack exchange question
         """
         t = int(time.time())
         q = get_questions(0)[0]
         irc.reply("%s <%s>" % (q['title'], q['url']))
 
-    last_question = wrap(last_question)
+    lastq = wrap(last_question)
 
 def get_questions(from_date):
     new_questions = []

@@ -9,4 +9,4 @@ def configure(advanced):
 StackEx = conf.registerPlugin('StackEx')
 
 conf.registerGlobalValue(StackEx, 'waitPeriod', 
-    registry.PositiveInteger(300, """Indicates how many seconds the bot will wait between retrieving retrieving questions"""))
+    registry.PositiveInteger(300, """Indicates how many seconds the bot will wait between retrieving questions"""))
