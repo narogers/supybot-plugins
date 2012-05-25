@@ -23,7 +23,6 @@ class StackEx(callbacks.Plugin):
         self.last_request = int(time.time()) - (2 * 60 * 60)
 
     def __call__(self, irc, msg):
-        logger.info("inside StackEx call")
         self.__parent.__call__(irc, msg)
         now = int(time.time())
         wait = self.registryValue('waitPeriod')
@@ -35,12 +34,11 @@ class StackEx(callbacks.Plugin):
             if len(questions) > 0:
                 n = ["%s <%s>" % (q['title'], q['url']) for q in questions]
                 logger.info("found questions: %s" % n)
-                irc.reply('[library stackexchange]' + ' ; '.join(n), to='#code4lib', prefixNick=False)
+                irc.reply('[library stackexchange] ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
 
     def lastq(self, irc, msg, args):
         """returns the last libraries stack exchange question
         """
-        logger.info("calling lastq")
         t = int(time.time())
         q = get_questions(0)[0]
         irc.reply("%s <%s>" % (q['title'], q['url']))
@@ -52,7 +50,7 @@ def get_questions(from_date):
     # all stack exchange api calls return gzipped content
     # kinda sucky that urllib2 doesn't hande gzip :(
     url = "http://api.stackexchange.com/2.0/questions?order=desc&sort=creation&site=libraries.stackexchange.com&fromdate=%s" % from_date
-    logger.info(url)
+    logger.info("calling stackex api: %s" % url)
     response = urllib2.urlopen(url)
     buf = StringIO(response.read())
     f = gzip.GzipFile(fileobj=buf)
