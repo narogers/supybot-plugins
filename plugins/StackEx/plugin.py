@@ -38,7 +38,7 @@ class StackEx(callbacks.Plugin):
         q = get_questions(0)[0]
         irc.reply("%s <%s>" % (q['title'], q['url']))
 
-    lastq = wrap(last_question)
+    lastq = wrap(lastq)
 
 def get_questions(from_date):
     new_questions = []
