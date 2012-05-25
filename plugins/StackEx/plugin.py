@@ -3,6 +3,7 @@ import time
 import gzip
 import logging
 import urllib2
+import HTMLParser
 
 from StringIO import StringIO
 
@@ -10,6 +11,7 @@ from supybot.commands import *
 import supybot.callbacks as callbacks
 
 logger = logging.getLogger('supybot')
+html_parser = HTMLParser.HTMLParser()
 
 class StackEx(callbacks.Plugin):
     """silly stuff to do with http://libraries.stackexchange.com/
@@ -58,8 +60,13 @@ def get_questions(from_date):
     questions = json.loads(data)
     logger.info("got stackex response: %s" % questions)
     for question in questions['items']:
-        new_questions.append({'title': question['title'], 'url': question['link']})
+        new_questions.append({
+            'title': textify(question['title']),
+            'url': textify(question['link'])})
 
     return new_questions
+
+def textify(html):
+    return html_parser.unescape(html)
 
 Class = StackEx
