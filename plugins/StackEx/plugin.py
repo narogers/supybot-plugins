@@ -36,6 +36,8 @@ class StackEx(callbacks.Plugin):
         q = get_questions(0)[0]
         irc.reply("%s <%s>" % (q['title'], q['url']))
 
+    last_question = wrap(last_question)
+
 def get_questions(from_date):
     new_questions = []
     # all stack exchange api calls return gzipped content
