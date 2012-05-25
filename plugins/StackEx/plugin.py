@@ -32,7 +32,7 @@ class StackEx(callbacks.Plugin):
             questions = get_questions(self.last_request)
             self.last_request = now
             if len(questions) > 0:
-                n = ["%s <%s>" % (q['title'], q['url']) for q in questions]
+                n = ["%s - %s" % (q['title'], q['url']) for q in questions]
                 logger.info("found questions: %s" % n)
                 irc.reply('[library stackexchange] ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
 
