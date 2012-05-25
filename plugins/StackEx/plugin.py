@@ -1,12 +1,15 @@
 import json
 import time
 import gzip
+import logging
 import urllib2
 
 from StringIO import StringIO
 
 from supybot.commands import *
 import supybot.callbacks as callbacks
+
+logger = logging.getLogger('supybot')
 
 class StackEx(callbacks.Plugin):
     """silly stuff to do with http://libraries.stackexchange.com/
@@ -20,20 +23,24 @@ class StackEx(callbacks.Plugin):
         self.last_request = int(time.time()) - (2 * 60 * 60)
 
     def __call__(self, irc, msg):
+        logger.info("inside StackEx call")
         self.__parent.__call__(irc, msg)
-        now = time.time()
+        now = int(time.time())
         wait = self.registryValue('waitPeriod')
         if now - self.last_request > wait:
-            self.last_request = int(now)
+            logger.info("looking for new questions since %s" % now)
             irc = callbacks.SimpleProxy(irc, msg)
-            questions = get_questions(last_request)
+            questions = get_questions(self.last_request)
+            self.last_request = now
             if len(questions) > 0:
-                n = ["%s <%s>" % (q.title, q.url) for q in questions]
-                irc.reply('new library questions: ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
+                n = ["%s <%s>" % (q['title'], q['url']) for q in questions]
+                logger.info("found questions: %s" % n)
+                irc.reply('[library stackexchange]' + ' ; '.join(n), to='#code4lib', prefixNick=False)
 
     def lastq(self, irc, msg, args):
         """returns the last libraries stack exchange question
         """
+        logger.info("calling lastq")
         t = int(time.time())
         q = get_questions(0)[0]
         irc.reply("%s <%s>" % (q['title'], q['url']))
@@ -45,11 +52,13 @@ def get_questions(from_date):
     # all stack exchange api calls return gzipped content
     # kinda sucky that urllib2 doesn't hande gzip :(
     url = "http://api.stackexchange.com/2.0/questions?order=desc&sort=creation&site=libraries.stackexchange.com&fromdate=%s" % from_date
+    logger.info(url)
     response = urllib2.urlopen(url)
     buf = StringIO(response.read())
     f = gzip.GzipFile(fileobj=buf)
     data = f.read()
     questions = json.loads(data)
+    logger.info("got stackex response: %s" % questions)
     for question in questions['items']:
         new_questions.append({'title': question['title'], 'url': question['link']})
 
