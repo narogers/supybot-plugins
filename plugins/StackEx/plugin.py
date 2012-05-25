@@ -11,6 +11,8 @@ import supybot.callbacks as callbacks
 class StackEx(callbacks.Plugin):
     """silly stuff to do with http://libraries.stackexchange.com/
     """
+    threaded = True
+
     def __init__(self, irc):
         self.__parent = super(StackEx, self)
         self.__parent.__init__(irc)
