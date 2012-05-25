@@ -56,9 +56,3 @@ def get_questions(from_date):
     return new_questions
 
 Class = StackEx
-
-if __name__ == "__main__":
-    now = time.time()
-    then = now - (2 * 60 * 60) # an hour ago
-    for q in get_questions(int(then)):
-        print "%s <%s>" % (q['title'], q['url'])
