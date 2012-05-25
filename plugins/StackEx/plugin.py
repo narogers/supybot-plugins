@@ -9,10 +9,12 @@ from supybot.commands import *
 import supybot.callbacks as callbacks
 
 class StackEx(callbacks.Plugin):
+    """silly stuff to do with http://libraries.stackexchange.com/
+    """
     def __init__(self, irc):
         self.__parent = super(StackEx, self)
         self.__parent.__init__(irc)
-        # when starting up consider any questions in the last two hours
+        # when starting up fetch any questions in the last two hours
         self.last_request = int(time.time()) - (2 * 60 * 60)
 
     def __call__(self, irc, msg):
