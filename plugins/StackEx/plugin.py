@@ -62,7 +62,7 @@ def get_questions(from_date):
     for question in questions['items']:
         new_questions.append({
             'title': textify(question['title']),
-            'url': shorten(textify(question['link'])}))
+            'url': shorten(textify(question['link']))})
 
     return new_questions
 
