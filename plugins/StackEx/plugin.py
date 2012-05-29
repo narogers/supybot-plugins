@@ -62,11 +62,17 @@ def get_questions(from_date):
     for question in questions['items']:
         new_questions.append({
             'title': textify(question['title']),
-            'url': textify(question['link'])})
+            'url': shorten(textify(question['link'])}))
 
     return new_questions
 
 def textify(html):
     return html_parser.unescape(html)
+
+def shorten(url):
+    params = {'longUrl' : longUrl, 'login' : 'zoia', 'apiKey' : 'R_e0079bf72e9c5f53bb48ef0fe706a57c', 'version' : '2.0.1', 'format' : 'json'}
+    url = 'http://api.bit.ly/shorten?' + urlencode(params)
+    response = json.loads(urllib2.urlopen(url).read())
+    return response['results'][longUrl]['shortUrl']
 
 Class = StackEx
