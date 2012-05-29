@@ -2,6 +2,7 @@ import json
 import time
 import gzip
 import logging
+import urllib
 import urllib2
 import HTMLParser
 
@@ -71,7 +72,7 @@ def textify(html):
 
 def shorten(url):
     params = {'longUrl' : longUrl, 'login' : 'zoia', 'apiKey' : 'R_e0079bf72e9c5f53bb48ef0fe706a57c', 'version' : '2.0.1', 'format' : 'json'}
-    url = 'http://api.bit.ly/shorten?' + urlencode(params)
+    url = 'http://api.bit.ly/shorten?' + urllib.urlencode(params)
     response = json.loads(urllib2.urlopen(url).read())
     return response['results'][longUrl]['shortUrl']
 
