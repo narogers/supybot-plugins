@@ -32,6 +32,8 @@ class Forecast(callbacks.Privmsg):
 
             if 'boston' in dict(opts):
               response = response.replace('FUCKING','WICKED')
+            if zipcode == 'Winnipeg' or zipcode == 'winnipeg':
+              response = "WINNIPEG IS A FROZEN SHITHOLE"
             irc.reply(response.encode('utf-8'), prefixNick=True)
         except:
             irc.reply("Man, I have no idea; things blew up real good.", prefixNick=True)
