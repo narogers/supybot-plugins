@@ -26,9 +26,10 @@ class Forecast(callbacks.Privmsg):
         site = 'http://www.thefuckingweather.com/?zipcode=%s' % zipcode
         try:
             soup = self._fetch(site)
-            response = soup.find('div', 'large').findAll(text=True)
-            response = u' '.join([x.strip() for x in response])
-            response = response.replace('&deg;', u'\u00B0')
+            temperature = soup.find('span', 'temperature').text + u'\u00B0?! '
+            remark = soup.find('p','remark').text
+            response = temperature + remark
+
             if 'boston' in dict(opts):
               response = response.replace('FUCKING','WICKED')
             irc.reply(response.encode('utf-8'), prefixNick=True)
