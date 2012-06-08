@@ -26,8 +26,8 @@ class Forecast(callbacks.Privmsg):
         site = 'http://www.thefuckingweather.com/?zipcode=%s' % zipcode
         try:
             soup = self._fetch(site)
-            temperature = soup.find('span', 'temperature').text + u'\u00B0?! '
-            remark = soup.find('p','remark').text
+            temperature = soup.find('span', 'temperature').string + u'\u00B0?! '
+            remark = soup.find('p','remark').string
             response = temperature + remark
 
             if 'boston' in dict(opts):
