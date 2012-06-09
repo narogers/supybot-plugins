@@ -64,11 +64,16 @@ class TwitterSnarfer(callbacks.PluginRegexp):
   
     def recode(text):
         return BSS(text.encode('utf8','ignore'), convertEntities=BSS.HTML_ENTITIES)
-        
+
+    def lengthen_urls(tweet):
+        for link in tweet['entities']['urls']:
+            tweet['text'] = tweet['text'].replace(link['url'], link['expanded_url'])
+
     resp = 'Gettin nothin from teh twitter.'
-    url = 'http://api.twitter.com/1/statuses/show/%s.json' % (tweet_id)
+    url = 'http://api.twitter.com/1/statuses/show/%s.json?include_entities=true' % (tweet_id)
     print url
     tweet = self._fetch_json(url)
+    lengthen_urls(tweet)
     resp = "<%s> %s" % (tweet['user']['screen_name'], recode(tweet['text']))
     irc.reply(resp.replace('\n',' ').strip(' '), prefixNick=False)
 
