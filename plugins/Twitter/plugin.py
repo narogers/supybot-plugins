@@ -150,32 +150,40 @@ class Twitter(callbacks.Plugin):
         
         def recode(text):
             return BSS(text.encode('utf8','ignore'), convertEntities=BSS.HTML_ENTITIES)
-            
+
+        def lengthen_urls(tweet):
+            for link in tweet['entities']['urls']:
+                tweet['text'] = tweet['text'].replace(link['url'], link['expanded_url'])
+
         resp = 'Gettin nothin from teh twitter.'
         if tweet_id:
-            url = 'http://api.twitter.com/1/statuses/show/%s.json' % (tweet_id)
+            url = 'http://api.twitter.com/1/statuses/show.json?id=%s&include_entities=true' % (tweet_id)
             tweet = self._fetch_json(url)
+            lengthen_urls(tweet)
             resp = "<%s> %s" % (tweet['user']['screen_name'], recode(tweet['text']))
         elif query:
             if screen_name:
                 query = "from:%s %s" % (screen_name, query)
             url = 'http://search.twitter.com/search.json?' 
-            json = self._fetch_json(url + urlencode({ 'q': query, 'rpp': 3 }))
+            json = self._fetch_json(url + urlencode({ 'q': query, 'rpp': 3, 'include_entities': 'true' }))
             try:
                 tweets = json['results']
+                for tweet in tweets:
+                    lengthen_urls(tweet)
                 extracted = ["<%s> %s" % (x['from_user'], recode(x['text'])) for x in tweets]
                 resp = ' ;; '.join(extracted)
             except:
                 pass
         else:
             if screen_name:
-                url = 'http://twitter.com/statuses/user_timeline.json?'
-                url = url + urlencode({'screen_name': screen_name})
+                url = 'http://api.twitter.com/1/statuses/user_timeline.json?'
+                url = url + urlencode({'screen_name': screen_name}) + '&include_entities=true'
             else:
-                url = 'http://twitter.com/statuses/public_timeline.json?'
+                url = 'http://api.twitter.com/1/statuses/public_timeline.json?include_entities=true'
             tweets = self._fetch_json(url)
             if tweets:
                 tweet = tweets[0] #randint(0, len(tweets)-1)]
+                lengthen_urls(tweet)
                 resp = "%s: %s" % (tweet['user']['screen_name'], recode(tweet['text']))
         irc.reply(resp.replace('\n',' ').strip(' '))
 
