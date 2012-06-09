@@ -71,7 +71,6 @@ class TwitterSnarfer(callbacks.PluginRegexp):
 
     resp = 'Gettin nothin from teh twitter.'
     url = 'http://api.twitter.com/1/statuses/show/%s.json?include_entities=true' % (tweet_id)
-    print url
     tweet = self._fetch_json(url)
     lengthen_urls(tweet)
     resp = "<%s> %s" % (tweet['user']['screen_name'], recode(tweet['text']))
