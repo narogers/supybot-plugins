@@ -12,7 +12,11 @@ class Fixit(callbacks.Plugin):
       verbs = ['attackclone', 'bootstrap', 'tweetybird', 'architect', 
                'merge', 'compile', 'boilerstrap', 'git push', 'fork',
                'configure', 'hash', 'salt', 'commit', 'echo', 'version',
-               'create value for', 'facet', 're-index', 'relevance-rank'
+               'create value for', 'facet', 're-index', 'relevance-rank',
+               'monkeypatch', 'scrape', 'install', 'mashup', 'integrate',
+               'snippet', 'wikify', 'network', 'proxy', 'toggle', 'reboot',
+               'visualize', 'federate', 'curate', 'gamify', 'crowdsource',
+               'scale up', 'cloud-host'
       ]
       
       nouns = ['framework', 'html5', 'rubygem', 'shawarma', 'web app', 
@@ -22,7 +26,11 @@ class Fixit(callbacks.Plugin):
                'lambda function', 'RESTful JSON API', 'Solr', 'cloud', 
                'data', 'Drupal module', 'OAI-PMH', 'metadata', 'schema',
                'Blacklight', 'tweetybird', 'social media', 'backbone',
-               'cross-universe compatibility', 'boilerstrap', 'html9'
+               'cross-universe compatibility', 'boilerstrap', 'html9',
+               'beautifulsoup', 'failwhale', 'mashup', 'beans', 'cookies',
+               'discovery layer', 'bits', 'architecture', 'github', 'zoia',
+               'jquery', 'network', 'transistor', 'PDP-11', 'Fortran',
+               'analytics', 'Z39.50'
       ]
       
       verb = choice(verbs)
