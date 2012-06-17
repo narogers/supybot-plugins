@@ -6,6 +6,7 @@ import supybot.callbacks as callbacks
 
 import calendar
 from random import randint
+from random import choice
 import re
 import sys
 import simplejson
@@ -188,6 +189,30 @@ class Twitter(callbacks.Plugin):
         irc.reply(resp.replace('\n',' ').strip(' '))
 
     twit = wrap(twit, [getopts({'from':'something','id':'something'}), optional('text')])
+
+    def dogs(self, irc, msg, args, channel, name):
+      """
+      @dogs [user]
+
+      Dr. dogsdoingthings describes the philosomatic state of
+      a random channel member, or [user] if specified.
+      """
+
+      resp = u"Dogs positing that, in the infinite timeframe of the universe, a bug is indistinguishable from an unknown feature."
+      if name:
+        username = name
+      else:
+        username = choice(list(irc.state.channels[channel].users))
+
+      url = 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=dogsdoingthings&count=100'
+
+      tweets = self._fetch_json(url)
+      if tweets:
+        resp = choice(tweets)['text']
+
+      irc.reply(resp.replace("Dogs", username).strip(' '))
+
+    dogs = wrap(dogs, ['channeldb', optional('text')])
     
     def trend(self, irc, msg, args, query):
       """[<query>]
