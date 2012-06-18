@@ -625,6 +625,46 @@ class Assorted(callbacks.Privmsg):
 
     nonsense = wrap(nonsense, [optional('int'),optional('anything'),optional('int'),optional('int')])
 
+    def hero(self, irc, msg, args, opts, nick):
+        """[--sex <male|female|neuter>] [--powers <1..15>] [name] - Generate some random superhero powers
+        from http://www.rps.net/cgi-bin/stone/randpower.pl"""
+        sexes = { 'male': 0, 'female': 1, 'neuter': 2 }        
+        if not nick:
+          nick = msg.nick
+
+        sex = 0
+        powers = 0
+        
+        for (opt, arg) in opts:
+            if opt == 'sex':
+                try:
+                  sex = sexes[arg]
+                except:
+                  sex = 0
+            if opt == 'powers':
+                powers = arg
+          
+        if powers > 15:
+          irc.error('Maximum of 15 powers allowed.')
+        else:
+          postdata = {}
+          postdata['name'] = nick
+          postdata['sex']  = sex
+          postdata['numpowers'] = powers
+          postdata['weakness'] = 1
+          postdata = urlencode(postdata)
+
+          try:
+              soup = self._url2soup('http://www.rps.net/cgi-bin/stone/randpower.pl', {}, postdata)
+          except HTTPError, e:
+              irc.reply('http error %s for %s' % (e.code, url), prefixNick=True); return
+          except StopParsing, e:
+              irc.reply('parsing error %s for %s' % (e.code, url), prefixNick=True); return
+
+          text = soup.findAll(text=re.compile('\S'))[-1].strip()
+          irc.reply(text, prefixNick=False)
+
+    hero = wrap(hero, [getopts({'sex':("literal", ("male","female","neuter")),'powers':'int'}), optional('text')])
 
     def itr(self,irc,msg,args,continent):
         """
