@@ -373,6 +373,10 @@ class Translators(callbacks.Privmsg):
       """ <text> - talk like ryan gosling"""
       irc.reply("Hey girl. %s" % (' '.join(args)), prefixNick=False)
 
+    def habla(self, irc, msg, args):
+      """ <text> - Say 'what' again. I double dare you. """
+      irc.reply("%s, motherfucker, do you speak it?" % (' '.join(args)), prefixNick=False)
+
 Class = Translators
 
 
