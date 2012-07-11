@@ -1932,6 +1932,7 @@ class Assorted(callbacks.Privmsg):
       else:
         article = 'an'
 
-      irc.reply("mixes %s and %s to make %s %s, and sends it sliding down the bar to %s (%s)" % (u', '.join(ingredients), last, article, drink, nick, resp.url), action=True)
+      text = u'mixes %s and %s to make %s %s, and sends it sliding down the bar to %s (%s)' % (u', '.join(ingredients), last, article, drink, nick, resp.url)
+      irc.reply(text.encode('utf-8'), action=True)
       
 Class = Assorted
