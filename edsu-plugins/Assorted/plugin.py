@@ -1912,4 +1912,26 @@ class Assorted(callbacks.Privmsg):
       irc.reply(u'%s, bitches!' % re.sub(r'[.!?,;:]+$','',what))
     bitch=wrap(bitch,['text'])
     
+    def cocktail(self, irc, msg, args):
+      """[<who>]
+      Mix a random cocktail from http://www.cocktaildb.com/"""
+      
+      if len(args) > 0:
+          nick = ' '.join(args)
+      else:
+          nick = msg.nick
+      req = Request(url='http://www.cocktaildb.com/index?_action_randomRecipe=1')
+      resp = urlopen(req)
+      soup = BeautifulSoup(resp.read())
+      desc = soup.find('meta',{'name':'description'})['content']
+      (drink,rest) = re.compile('\s*:\s*').split(desc)
+      ingredients = re.compile('\s*,\s*').split(rest)
+      last = ingredients.pop()
+      if re.compile('[aeiouAEIOU]').match(drink) is None:
+        article = 'a'
+      else:
+        article = 'an'
+
+      irc.reply("mixes %s and %s to make %s %s, and sends it sliding down the bar to %s (%s)" % (u', '.join(ingredients), last, article, drink, nick, resp.url), action=True)
+      
 Class = Assorted
