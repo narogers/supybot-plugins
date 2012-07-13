@@ -68,6 +68,8 @@ class TwitterSnarfer(callbacks.PluginRegexp):
     def lengthen_urls(tweet):
         for link in tweet['entities']['urls']:
             tweet['text'] = tweet['text'].replace(link['url'], link['expanded_url'])
+        for media in tweet['entities']["media"]:
+            tweet['text'] = tweet['text'].replace(media['url'], media['media_url'])
 
     resp = 'Gettin nothin from teh twitter.'
     url = 'http://api.twitter.com/1/statuses/show/%s.json?include_entities=true' % (tweet_id)
