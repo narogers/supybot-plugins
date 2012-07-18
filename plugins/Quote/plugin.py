@@ -29,6 +29,7 @@
 
 from supybot.commands import *
 import supybot.plugins as plugins
+from random import randint
 import re
 import sys
 
@@ -198,6 +199,28 @@ class Quote(plugins.ChannelIdDatabasePlugin):
       else:
         irc.error('I have no quotes in my database for %s.' % channel)
     raw = wrap(raw, ['channeldb', optional('id')])
+
+    def derp(self, irc, msg, args, channel, id):
+      words = ('herp','derp','da','herpity','derpity','herpa','derpa')
+      if id is None:
+        quote = self.db.random(channel)
+      else:
+        quote = self.db.get(channel,id)
+
+      if quote:
+        matches = re.match("^(<.+?>)\s*(.+)$",quote.text)
+        if matches == None:
+          who = None
+          what = quote.text
+        else:
+          (who,what) = matches.groups()
+        derps = [words[randint(0,len(words)-1)] for word in re.split("\s+",what)]
+        derps.insert(0,who)
+      
+        irc.reply(' '.join(filter((lambda x: x), derps)))
+      else:
+        irc.error('I have no quotes in my database for %s.' % channel)
+    derp = wrap(derp, ['channeldb', optional('id')])
     
 Class = Quote
 
