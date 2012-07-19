@@ -58,12 +58,12 @@ class Nadsat(callbacks.Plugin):
                         nadphrase.append(naddict[word.lower()])
                     else:
                         nadphrase.append(word)
-           	 else:
+           	else:
                 	words = word.split(' ')
                 	for thing in words:
                     		if naddict.get(thing.lower(), None):
                         		nadphrase.append(naddict[thing.lower()])
-               			 else:
+               			else:
                     			nadphrase.append(thing)
             nadphrase = ' '.join(nadphrase)
             irc.reply(nadphrase, prefixNick=True)
