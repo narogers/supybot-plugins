@@ -152,6 +152,12 @@ class Translators(callbacks.Privmsg):
         
         irc.reply(msg)
     
+    def zoidberg(self, irc, msg, args):
+        """
+        <text> - "Why not Zoidberg? (V) (;,,;) (V) *woop w-w-woop woop woop*"
+        """
+        irc.reply("%s, Why not Zoidberg? (V) (;,,;) (V) *woop w-w-woop woop woop*" % (' '.join(args)), prefixNick=False)
+   
     def scalia(self, irc, msg, args):
         """<string>
         random 'scare' quote insertion"""
