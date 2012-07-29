@@ -36,7 +36,7 @@ import supybot.callbacks as callbacks
 import supybot.utils.web as web
 
 from urllib import urlencode
-import urlib2
+import urllib2
 import simplejson
 
 HEADERS = dict(ua = 'Zoia/1.0 (Supybot/0.83; Brooklynt Plugin; http://code4lib.org/irc)')
