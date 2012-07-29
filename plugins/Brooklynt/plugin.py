@@ -51,8 +51,8 @@ class Brooklynt(callbacks.Plugin):
       params = {'method': 'brooklyn.integers.create'}
       data = urlencode(params)
       request = urllib2.Request(url, data)
-      response = simplejson.loads(urllib2.urlopen(req))
-      result = "Your hand-crafted integer is %s - %s " % (response.integer, response.shorturl)
+      response = simplejson.load(urllib2.urlopen(request))
+      result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
       irc.reply(result)
         
     brooklyninteger = brooklynt
