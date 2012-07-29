@@ -44,7 +44,7 @@ HEADERS = dict(ua = 'Zoia/1.0 (Supybot/0.83; Brooklynt Plugin; http://code4lib.o
 class Brooklynt(callbacks.Plugin):
     
     def __init__(self, irc):
-        self.url = "http://api.brooklynintegers.com/rest/"
+      self.url = "http://api.brooklynintegers.com/rest/"
 
     def brooklynt(self, irc, msg, args, query):
       """Request a new hand-crafted artisinal integer from http://brooklynintegers.com"""
