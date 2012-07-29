@@ -50,7 +50,7 @@ class Brooklynt(callbacks.Plugin):
         """Request a new hand-crafted artisinal integer from http://brooklynintegers.com"""
         params = {'method': 'brooklyn.integers.create'}
         data = urlencode(params)
-        request = urllib2.Request(url, data)
+        request = urllib2.Request(url, data, HEADERS)
         response = simplejson.load(urllib2.urlopen(request))
         result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
         irc.reply(result)
