@@ -40,17 +40,15 @@ import urllib2
 import simplejson
 
 HEADERS = {'User-Agent': 'Zoia/1.0 (Supybot/0.83; Brooklynt Plugin; http://code4lib.org/irc)'}
+URL = "http://api.brooklynintegers.com/rest/"
 
 class Brooklynt(callbacks.Plugin):
-    
-    def __init__(self, irc):
-        self.url = "http://api.brooklynintegers.com/rest/"
 
     def brooklynt(self, irc, msg, args, query):
         """Request a new hand-crafted artisinal integer from http://brooklynintegers.com"""
         params = {'method': 'brooklyn.integers.create'}
         data = urlencode(params)
-        request = urllib2.Request(url, data, HEADERS)
+        request = urllib2.Request(URL, data, HEADERS)
         response = simplejson.load(urllib2.urlopen(request))
         result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
         irc.reply(result)
