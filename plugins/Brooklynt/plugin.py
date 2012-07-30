@@ -44,7 +44,7 @@ URL = "http://api.brooklynintegers.com/rest/"
 
 class Brooklynt(callbacks.Plugin):
 
-    def brooklynt(self, irc, msg, args, query):
+    def brooklynt(self, irc, msg, args):
         """Request a new hand-crafted artisinal integer from http://brooklynintegers.com"""
         params = {'method': 'brooklyn.integers.create'}
         data = urlencode(params)
@@ -53,8 +53,6 @@ class Brooklynt(callbacks.Plugin):
         result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
         irc.reply(result)
 
-    brooklynt = wrap(brooklynt, ['text'])
-        
     brooklyninteger = brooklynt
      
 Class = Brooklynt
