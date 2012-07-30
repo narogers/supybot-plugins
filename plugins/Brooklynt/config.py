@@ -40,9 +40,9 @@ def configure(advanced):
     conf.registerPlugin('Brooklynt', True)
 
 
-Wunderground = conf.registerPlugin('Brooklynt')
+Brooklynt = conf.registerPlugin('Brooklynt')
 # This is where your configuration variables (if any) should go.  For example:
-# conf.registerGlobalValue(Wunderground, 'someConfigVariableName',
+# conf.registerGlobalValue(Brooklynt, 'someConfigVariableName',
 #     registry.Boolean(False, """Help for someConfigVariableName."""))
 
 
