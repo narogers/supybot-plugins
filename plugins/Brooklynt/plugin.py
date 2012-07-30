@@ -52,6 +52,8 @@ class Brooklynt(callbacks.Plugin):
         response = simplejson.load(urllib2.urlopen(request))
         result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
         irc.reply(result)
+
+    brooklynt = wrap(brooklynt, ['text'])
         
     brooklyninteger = brooklynt
      
