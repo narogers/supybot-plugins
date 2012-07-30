@@ -44,14 +44,20 @@ URL = "http://api.brooklynintegers.com/rest/"
 
 class Brooklynt(callbacks.Plugin):
 
-    def brooklynt(self, irc, msg, args):
+    def brooklynt(self, irc, msg, args, option):
         """Request a new hand-crafted artisinal integer from http://brooklynintegers.com"""
         params = {'method': 'brooklyn.integers.create'}
         data = urlencode(params)
         request = urllib2.Request(URL, data, HEADERS)
         response = simplejson.load(urllib2.urlopen(request))
-        result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
+        if option == "raw":
+            result = response['integer']
+        else:
+            result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
+
         irc.reply(result)
+
+    brooklynt = wrap(brooklynt, [optional('text')])
 
     brooklyninteger = brooklynt
      
