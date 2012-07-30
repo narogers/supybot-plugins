@@ -39,7 +39,7 @@ from urllib import urlencode
 import urllib2
 import simplejson
 
-HEADERS = {'User-Agent': 'Zoia/1.0 (Supybot/0.83; Brooklynt Plugin; http://code4lib.org/irc)'
+HEADERS = {'User-Agent': 'Zoia/1.0 (Supybot/0.83; Brooklynt Plugin; http://code4lib.org/irc)'}
 
 class Brooklynt(callbacks.Plugin):
     
