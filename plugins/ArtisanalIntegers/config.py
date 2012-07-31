@@ -28,40 +28,22 @@
 
 ###
 
-import supybot.utils as utils
-from supybot.commands import *
-import supybot.plugins as plugins
-import supybot.ircutils as ircutils
-import supybot.callbacks as callbacks
-import supybot.utils.web as web
+import supybot.conf as conf
+import supybot.registry as registry
 
-from urllib import urlencode
-import urllib2
-import simplejson
-
-HEADERS = {'User-Agent': 'Zoia/1.0 (Supybot/0.83; Brooklynt Plugin; http://code4lib.org/irc)'}
-URL = "http://api.brooklynintegers.com/rest/"
-
-class Brooklynt(callbacks.Plugin):
-
-    def brooklynt(self, irc, msg, args, option):
-        """Request a new hand-crafted artisinal integer from http://brooklynintegers.com"""
-        params = {'method': 'brooklyn.integers.create'}
-        data = urlencode(params)
-        request = urllib2.Request(URL, data, HEADERS)
-        response = simplejson.load(urllib2.urlopen(request))
-        if option == "raw":
-            result = response['integer']
-        else:
-            result = "Your hand-crafted integer is %s - %s " % (response['integer'], response['shorturl'])
-
-        irc.reply(result)
-
-    brooklynt = wrap(brooklynt, [optional('text')])
-
-    brooklyninteger = brooklynt
-     
-Class = Brooklynt
+def configure(advanced):
+    # This will be called by supybot to configure this module.  advanced is
+    # a bool that specifies whether the user identified himself as an advanced
+    # user or not.  You should effect your configuration by manipulating the
+    # registry as appropriate.
+    from supybot.questions import expect, anything, something, yn
+    conf.registerPlugin('ArtisanalIntegers', True)
 
 
-# vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
+ArtisanalIntegers = conf.registerPlugin('ArtisanalIntegers')
+# This is where your configuration variables (if any) should go.  For example:
+# conf.registerGlobalValue(ArtisanalIntegers, 'someConfigVariableName',
+#     registry.Boolean(False, """Help for someConfigVariableName."""))
+
+
+# vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
