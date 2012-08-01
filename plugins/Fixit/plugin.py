@@ -16,7 +16,8 @@ class Fixit(callbacks.Plugin):
                'monkeypatch', 'scrape', 'install', 'mashup', 'integrate',
                'snippet', 'wikify', 'network', 'proxy', 'toggle', 'reboot',
                'visualize', 'federate', 'curate', 'gamify', 'crowdsource',
-               'scale up', 'cloud-host'
+               'scale up', 'cloud-host', 'progressively enhance', 
+               'open-source'
       ]
       
       nouns = ['framework', 'html5', 'rubygem', 'shawarma', 'web app', 
@@ -30,7 +31,9 @@ class Fixit(callbacks.Plugin):
                'beautifulsoup', 'failwhale', 'mashup', 'beans', 'cookies',
                'discovery layer', 'bits', 'architecture', 'github', 'zoia',
                'jquery', 'network', 'transistor', 'PDP-11', 'Fortran',
-               'analytics', 'Z39.50'
+               'analytics', 'Z39.50', 'skunkworks', 'hadoop', 'persona',
+               'web scale cloud ILS', 'scalability', 'singularity',
+               'semantic web', 'triplestore', 'SFX', 'Fedora'
       ]
       
       verb = choice(verbs)
