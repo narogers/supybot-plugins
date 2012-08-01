@@ -33,7 +33,8 @@ class Fixit(callbacks.Plugin):
                'jquery', 'network', 'transistor', 'PDP-11', 'Fortran',
                'analytics', 'Z39.50', 'skunkworks', 'hadoop', 'persona',
                'web scale cloud ILS', 'scalability', 'singularity',
-               'semantic web', 'triplestore', 'SFX', 'Fedora'
+               'semantic web', 'triplestore', 'SFX', 'Fedora', 'Umlaut',
+               'Ümläüt'
       ]
       
       verb = choice(verbs)
