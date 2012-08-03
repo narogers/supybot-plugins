@@ -156,7 +156,9 @@ class Translators(callbacks.Privmsg):
         """
         <text> - "Why not Zoidberg? (V) (;,,;) (V) *woop w-w-woop woop woop*"
         """
-        irc.reply("%s, Why not Zoidberg? (V) (;,,;) (V) *woop w-w-woop woop woop*" % (' '.join(args)), prefixNick=False)
+        irc.reply("%s Why not Zoidberg?" % (' '.join(args)), prefixNick=False)
+        irc.reply("(V) (;,,;) (V)", prefixNick=False)
+        irc.reply("*woop w-w-woop woop woop*", prefixNick=False)
    
     def scalia(self, irc, msg, args):
         """<string>
