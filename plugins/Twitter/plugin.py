@@ -275,11 +275,16 @@ class Twitter(callbacks.Plugin):
       Post to the @bot4lib Twitter account"""
 #      tweet_text = '<%s> %s' % (user.name, text)
       tweet_text = self._shorten_urls(text)
-      if len(tweet_text) <= 140:
-        self._twitter_api('statuses/update', { 'status' : tweet_text }, post=True)
-        irc.reply('The operation succeeded.')
+      if len(tweet_text) > 140:
+        truncate_msg = " Tweet was truncated from original %d characters" % len(tweet_text)
+        while len(tweet_text) + 3 > 140:
+            tweet_text = tweet_text[:len(tweet_text) - 1]
+        tweet_text = tweet_text + '...'
       else:
-        irc.reply('Tweet is %s characters too long!' % (len(tweet_text) - 140))
+        truncate_msg = ""
+
+      self._twitter_api('statuses/update', { 'status' : tweet_text }, post=True)
+      irc.reply('The operation succeeded.%s' % truncate_msg)
 
     tweet = wrap(tweet, ['user','text'])
 
