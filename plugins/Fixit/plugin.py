@@ -34,7 +34,7 @@ class Fixit(callbacks.Plugin):
                'analytics', 'Z39.50', 'skunkworks', 'hadoop', 'persona',
                'web scale cloud ILS', 'scalability', 'singularity',
                'semantic web', 'triplestore', 'SFX', 'Fedora', 'Umlaut',
-               'Ümläüt', 'pip', 'AbstractSingletonProxyFactoryBean',
+               u'Ümläüt', 'pip', 'AbstractSingletonProxyFactoryBean',
                'platform', 'persistent database', 'user', 'Cucumber',
                'beans', 'analytics'
       ]
