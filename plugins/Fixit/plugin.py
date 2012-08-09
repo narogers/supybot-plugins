@@ -28,20 +28,21 @@ class Fixit(callbacks.Plugin):
                'data', 'Drupal module', 'OAI-PMH', 'metadata', 'schema',
                'Blacklight', 'tweetybird', 'social media', 'backbone',
                'cross-universe compatibility', 'boilerstrap', 'html9',
-               'beautifulsoup', 'failwhale', 'mashup', 'beans', 'cookies',
-               'discovery layer', 'bits', 'architecture', 'github', 'zoia',
+               'beautifulsoup', 'failwhale', 'mashup', 'cookie', 'dongle',
+               'discovery layer', 'architecture', 'github', 'zoia',
                'jquery', 'network', 'transistor', 'PDP-11', 'Fortran',
                'analytics', 'Z39.50', 'skunkworks', 'hadoop', 'persona',
                'web scale cloud ILS', 'scalability', 'singularity',
                'semantic web', 'triplestore', 'SFX', 'Fedora', 'Umlaut',
                'Ümläüt', 'pip', 'AbstractSingletonProxyFactoryBean',
-               'platform', 'persistent database', 'user' 'Cucumber'
+               'platform', 'persistent database', 'user', 'Cucumber',
+               'beans', 'analytics'
       ]
       
       verb = choice(verbs)
       object = choice(nouns)
       tool = choice(nouns)
-      advice = "Just "+verb+" that "+object+" with your "+tool+"."
+      advice = "Just "+verb+" the "+object+" with your "+tool+"."
       irc.reply(advice, prefixNick=True)
 
 Class = Fixit
