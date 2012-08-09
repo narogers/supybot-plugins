@@ -37,7 +37,7 @@ class Translators(callbacks.Privmsg):
             ftemp = float(match[1] + match[2])
             celsius = (ftemp - 32) * 5 / 9
             text = re.sub(match[0], "%-3.1fC" % celsius, text)
-        irc.reply(text + ", eh?", prefixNick=True)
+        irc.reply(text.rstrip(".,?!") + ", eh?", prefixNick=True)
     
     def aussie(self, irc, msg, args):
         """ string
@@ -55,7 +55,7 @@ class Translators(callbacks.Privmsg):
         """ string
         Offer some constructive criticism
         """
-        irc.reply("%s: PLEASE TRY HARDER" % ' '.join(args), prefixNick=False)
+        irc.reply("%s: PLEASE TRY HARDER" % ' '.join(args).rstrip(".,?!"), prefixNick=False)
     
     def ircnickize(self, irc, msg, args):
         """ string
@@ -139,7 +139,7 @@ class Translators(callbacks.Privmsg):
         """
         Adds "in bed" to the end of a phrase.
         """
-        s = ' '.join(args).strip(".")
+        s = ' '.join(args).rstrip(".,?!")
         
         motivate = re.match(r'^(.*) - (.*)$', s)
         quote = re.match(r'^Quote #(\d+): "(.*)" \((.*)\)$', s)
@@ -156,7 +156,7 @@ class Translators(callbacks.Privmsg):
         """
         <text> - "Why not Zoidberg? (V) (;,,;) (V) *woop w-w-woop woop woop*"
         """
-        irc.reply("%s Why not Zoidberg?" % (' '.join(args)), prefixNick=False)
+        irc.reply("%s Why not Zoidberg?" % (' '.join(args)).rstrip(".,?!"), prefixNick=False)
         irc.reply("(V) (;,,;) (V)", prefixNick=False)
         irc.reply("*woop w-w-woop woop woop*", prefixNick=False)
    
