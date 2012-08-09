@@ -17,7 +17,7 @@ class Fixit(callbacks.Plugin):
                'snippet', 'wikify', 'network', 'proxy', 'toggle', 'reboot',
                'visualize', 'federate', 'curate', 'gamify', 'crowdsource',
                'scale up', 'cloud-host', 'progressively enhance', 
-               'open-source'
+               'open-source', 'havisham'
       ]
       
       nouns = ['framework', 'html5', 'rubygem', 'shawarma', 'web app', 
@@ -34,7 +34,7 @@ class Fixit(callbacks.Plugin):
                'analytics', 'Z39.50', 'skunkworks', 'hadoop', 'persona',
                'web scale cloud ILS', 'scalability', 'singularity',
                'semantic web', 'triplestore', 'SFX', 'Fedora', 'Umlaut',
-               'Ümläüt'
+               'Ümläüt', 'pip'
       ]
       
       verb = choice(verbs)
