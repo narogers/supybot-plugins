@@ -36,7 +36,7 @@ class Fixit(callbacks.Plugin):
                'semantic web', 'triplestore', 'SFX', 'Fedora', 'Umlaut',
                u'\xdcml\xe4\xfct', 'pip', 'AbstractSingletonProxyFactoryBean',
                'platform', 'persistent database', 'user', 'Cucumber',
-               'beans', 'analytics'
+               'beans', 'analytics', 'bitcoin'
       ]
       
       verb = choice(verbs)
