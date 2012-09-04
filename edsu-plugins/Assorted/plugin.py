@@ -101,23 +101,23 @@ class Assorted(callbacks.Privmsg):
         results = self.get_votes(120)
         irc.reply('; '.join(results).encode('utf8'))
 
-    def keynotes2013(self,irc,msg,args):
-      """votes for the 2011 code4libcon keynote 
-      """
-      keynotes = [
-        "Estelle Getty", "Sylvester Stallone", "Yngwie Malmsteen",
-        "Andy Dick", "U. Rex Dumdum", "Michael J. Giarlo", "Ron Paul",
-        "Bacon Salt", "Zoia", "Ima Hogg", "Mark Lemongello", "'anon'",
-        "Trout Fishing in America", "Freddie Skunkcap", "Dick Assman",
-        "Rooster McConaughey", "Hacker John", "Ace Waterwheels"
-      ]
-      n = randint(3,8)
-      people = [keynotes.pop(randint(0, len(keynotes)-1)) for i in range(n)]
-      votes = [randint(1,100) for a in range(0,n)]
-      votes.sort(lambda a,b: cmp(b,a))
-      results = zip(people,votes)
-      msg = ["%s [%i]" % (result[0], result[1]) for result in results]
-      irc.reply('; '.join(msg))
+#    def keynotes2013(self,irc,msg,args):
+#      """votes for the 2011 code4libcon keynote 
+#      """
+#      keynotes = [
+#        "Estelle Getty", "Sylvester Stallone", "Yngwie Malmsteen",
+#        "Andy Dick", "U. Rex Dumdum", "Michael J. Giarlo", "Ron Paul",
+#        "Bacon Salt", "Zoia", "Ima Hogg", "Mark Lemongello", "'anon'",
+#        "Trout Fishing in America", "Freddie Skunkcap", "Dick Assman",
+#        "Rooster McConaughey", "Hacker John", "Ace Waterwheels"
+#      ]
+#      n = randint(3,8)
+#      people = [keynotes.pop(randint(0, len(keynotes)-1)) for i in range(n)]
+#      votes = [randint(1,100) for a in range(0,n)]
+#      votes.sort(lambda a,b: cmp(b,a))
+#      results = zip(people,votes)
+#      msg = ["%s [%i]" % (result[0], result[1]) for result in results]
+#      irc.reply('; '.join(msg))
 
     def hosts2013(self,irc,msg,args):
       """ 
@@ -1167,7 +1167,8 @@ class Assorted(callbacks.Privmsg):
             'keynotes': {'2009': '4',
                          '2010': '11',
                          '2011': '16',
-                         '2012': '20'},
+                         '2012': '20',
+			 '2013': '23'},
             'necode4lib': {'2008': '5'},
             'tshirts': {'2009': '8',
 	    	        '2010': '14',
@@ -1398,6 +1399,18 @@ class Assorted(callbacks.Privmsg):
             tallies, vote_url = self._diebold_tallies("keynotes", "2012")
         except PollNotFoundException, pnfe:
             irc.reply("Poll not found for keynotes in 2012: %s" % pnfe)
+        else:
+            irc.reply(('; '.join("%s [%s]" % t for t in tallies)).encode('utf-8'))
+            irc.reply("Have you voted? %s" % vote_url)
+
+    def keynotes2013(self, irc, msg, args):
+        """ 
+        Gets tally of keynoter votes for 2012 conference
+        """
+        try:
+            tallies, vote_url = self._diebold_tallies("keynotes", "2013")
+        except PollNotFoundException, pnfe:
+            irc.reply("Poll not found for keynotes in 2013: %s" % pnfe)
         else:
             irc.reply(('; '.join("%s [%s]" % t for t in tallies)).encode('utf-8'))
             irc.reply("Have you voted? %s" % vote_url)
