@@ -1691,6 +1691,18 @@ class Assorted(callbacks.Privmsg):
       
     stanford = wrap(stanford, ['inChannel'])
 
+    def kayfabe(self, irc, msg, args, channel):
+      """[<channel>]
+      Assign pro wrestling alignments"""
+      nicks = list(irc.state.channels[channel].users)
+      groups = [[],[]]
+      for nick in nicks:
+        groups[randint(0,1)].append(nick)
+      irc.reply('FACES: ' + ', '.join(groups[0]), prefixNick=False)
+      irc.reply('HEELS: ' + ', '.join(groups[1]), prefixNick=False)
+      
+    kayfabe = wrap(kayfabe, ['inChannel'])
+
     def shake(self, irc, msg, args, who):
         """[<who>]
         
