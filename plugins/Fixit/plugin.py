@@ -18,7 +18,9 @@ class Fixit(callbacks.Plugin):
                'visualize', 'federate', 'curate', 'gamify', 'crowdsource',
                'scale up', 'cloud-host', 'progressively enhance', 
                'open-source', 'havisham', 'refactor', 'empower',
-               'continuously deploy', 'inject', 'mock'
+               'continuously deploy', 'inject', 'mock', 'BBM me',
+               'face-time', 'migrate', 'nextgen', 'panoramically photograph',
+               'SMS', 'shibbolize'
       ]
       
       nouns = ['framework', 'html5', 'rubygem', 'shawarma', 'web app', 
@@ -38,7 +40,8 @@ class Fixit(callbacks.Plugin):
                u'\xdcml\xe4\xfct', 'pip', 'AbstractSingletonProxyFactoryBean',
                'platform', 'persistent database', 'user', 'Cucumber',
                'beans', 'analytics', 'bitcoin', 'test harness', 
-               'unit tests', 'dependency', 'QR codes'
+               'unit tests', 'dependency', 'QR codes', 'plugin','backend',
+               'frontend','middleware','CAS'
       ]
       
       verb = choice(verbs)
