@@ -45,6 +45,7 @@ class Twitter(callbacks.Plugin):
 
     def _get_mentions(self, maxAge = None):
       params = {}
+      params['include_entities'] = 'true'
       if self.last_mention != None:
         params['since_id'] = self.last_mention
       tweets = self._twitter_api('statuses/mentions', params)
@@ -55,6 +56,7 @@ class Twitter(callbacks.Plugin):
         for tweet in tweets:
           age = now - calendar.timegm(time.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
           if (maxAge is None) or (age <= maxAge):
+            self._lengthen_urls(tweet)
             responses.append('<%s> %s' % (tweet['user']['screen_name'],tweet['text']))
         responses.reverse()
       return responses
@@ -71,6 +73,12 @@ class Twitter(callbacks.Plugin):
           shortUrl = response['results'][longUrl]['shortUrl']
           result = result.replace(longUrl,shortUrl)
       return(result)
+
+    def _lengthen_urls(self, tweet):
+      for link in tweet['entities']['urls']:
+          tweet['text'] = tweet['text'].replace(link['url'], link['expanded_url'])
+      for media in tweet['entities'].get('media', []):
+          tweet['text'] = tweet['text'].replace(media['url'], media['media_url'])
       
     def _fetch_json(self, url):
         doc = web.getUrl(url, headers=HEADERS)
@@ -152,17 +160,11 @@ class Twitter(callbacks.Plugin):
         def recode(text):
             return BSS(text.encode('utf8','ignore'), convertEntities=BSS.HTML_ENTITIES)
 
-        def lengthen_urls(tweet):
-            for link in tweet['entities']['urls']:
-                tweet['text'] = tweet['text'].replace(link['url'], link['expanded_url'])
-            for media in tweet['entities'].get('media', []):
-                tweet['text'] = tweet['text'].replace(media['url'], media['media_url'])
-
         resp = 'Gettin nothin from teh twitter.'
         if tweet_id:
             url = 'http://api.twitter.com/1/statuses/show.json?id=%s&include_entities=true' % (tweet_id)
             tweet = self._fetch_json(url)
-            lengthen_urls(tweet)
+            self._lengthen_urls(tweet)
             resp = "<%s> %s" % (tweet['user']['screen_name'], recode(tweet['text']))
         elif query:
             if screen_name:
@@ -172,7 +174,7 @@ class Twitter(callbacks.Plugin):
             try:
                 tweets = json['results']
                 for tweet in tweets:
-                    lengthen_urls(tweet)
+                    self._lengthen_urls(tweet)
                 extracted = ["<%s> %s" % (x['from_user'], recode(x['text'])) for x in tweets]
                 resp = ' ;; '.join(extracted)
             except:
@@ -186,7 +188,7 @@ class Twitter(callbacks.Plugin):
             tweets = self._fetch_json(url)
             if tweets:
                 tweet = tweets[0] #randint(0, len(tweets)-1)]
-                lengthen_urls(tweet)
+                self._lengthen_urls(tweet)
                 resp = "%s: %s" % (tweet['user']['screen_name'], recode(tweet['text']))
         irc.reply(resp.replace('\n',' ').strip(' '))
 
