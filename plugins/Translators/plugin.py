@@ -132,8 +132,8 @@ class Translators(callbacks.Privmsg):
         """
         romneysneer = "*sneers* "
         romneysmirk = "*smirks*"
-        irc.reply(romneysneer + ' '.join(args))
-        irc.reply(romneysmirk)
+        irc.reply(romneysneer + ' '.join(args), prefixNick=False)
+        irc.reply(romneysmirk, prefixNick=False)
 
     def mjg(self, irc, msg, args):
         """
