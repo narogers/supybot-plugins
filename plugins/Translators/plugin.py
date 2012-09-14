@@ -125,7 +125,16 @@ class Translators(callbacks.Privmsg):
         """
         look = "Look, " if randint(0,1) else "Look, here's what I'm saying... "
         irc.reply(look + ' '.join(args))
-    
+   
+    def mitten(self, irc, msg, args):
+        """
+        The Romney sneer and smirk subroutine
+        """
+        romneysneer = "*sneers* "
+        romneysmirk = "*smirks*"
+        irc.reply(romneysneer + ' '.join(args))
+        irc.reply(romneysmirk)
+
     def mjg(self, irc, msg, args):
         """
         Truncates and refocuses your statement
