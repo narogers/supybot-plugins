@@ -142,7 +142,8 @@ class LoveHate(callbacks.Plugin):
         except StopIteration:
             irc.reply("I have no record of %s's loving or hating %s" % (msg.nick, thing))
     dontcare = wrap(dontcare, ['channeldb', 'text'])
-
+    meh = dontcare
+    
     def _find_stuff_out(self, channel, predicate, emotion, extractor = lambda r: r):
         predicates = [predicate]
         if emotion != None:
