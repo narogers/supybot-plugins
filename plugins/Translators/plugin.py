@@ -135,6 +135,14 @@ class Translators(callbacks.Privmsg):
         irc.reply(romneysneer + ' '.join(args), prefixNick=False)
         irc.reply(romneysmirk, prefixNick=False)
 
+    def kanye(self, irc, msg, args):
+        """
+        imma let you finish
+        """
+        imma = "imma let you finish... but, "
+        irc.reply("(⌐■_■)", , prefixNick=False)
+        irc.reply(imma + ' '.join(args), prefixNick=False)
+
     def mjg(self, irc, msg, args):
         """
         Truncates and refocuses your statement
