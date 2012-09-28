@@ -1672,9 +1672,9 @@ class Assorted(callbacks.Privmsg):
     def isitwhiskytime(self, irc, msg, args):
       affirmatives = ['Yes!','Always!','You need to ask?','When is it not?','Yes! (Duh!)']
       irc.reply(affirmatives[randint(0, len(affirmatives)-1)], prefixNick=True)
-      
+
     isitwhiskeytime = isitwhiskytime
-    
+
     def stanford(self, irc, msg, args, channel):
       """[<channel>]
       Assign users to groups for a fun recreation of the Stanford Prison Experiment!"""
@@ -1688,7 +1688,8 @@ class Assorted(callbacks.Privmsg):
           guards.append(nick)
       irc.reply('PRISONERS: ' + ', '.join(prisoners), prefixNick=False)
       irc.reply('GUARDS: ' + ', '.join(guards), prefixNick=False)
-      
+      irc.reply('SHORTIMERS: mbklein', prefixNick=False)
+
     stanford = wrap(stanford, ['inChannel'])
 
     def kayfabe(self, irc, msg, args, channel):
