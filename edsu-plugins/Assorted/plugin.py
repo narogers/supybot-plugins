@@ -761,8 +761,8 @@ class Assorted(callbacks.Privmsg):
         irc.reply("I win!", prefixNick=False)
       
     def stab(self, irc, msg, args):
-        irc.reply("---|===*" + ' '.join(args) + "*===>", prefixNick=False)
-        
+      irc.reply("o()xxxx[{::::::*" + ' '.join(args) + "*::::::>", prefixNick=False)
+       
     def halfbaked(self, irc, msg, args):
         """
         returns a radom half-baked idea from http://halfbakery.com
