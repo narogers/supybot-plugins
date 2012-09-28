@@ -140,7 +140,7 @@ class Translators(callbacks.Privmsg):
         imma let you finish
         """
         imma = "imma let you finish... but, "
-        irc.reply("(⌐■_■)", , prefixNick=False)
+        irc.reply("(⌐■_■)", prefixNick=False)
         irc.reply(imma + ' '.join(args), prefixNick=False)
 
     def mjg(self, irc, msg, args):
