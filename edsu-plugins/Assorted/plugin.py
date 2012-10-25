@@ -1960,5 +1960,19 @@ class Assorted(callbacks.Privmsg):
 
       text = u'mixes %s and %s to make %s %s, and sends it sliding down the bar to %s (%s)' % (u', '.join(ingredients), last, article, drink, nick, resp.url)
       irc.reply(text.encode('utf-8'), action=True)
-      
+    
+    def compliment(self, irc, msg, args, who):
+        """[<who>]
+        Pulls an emergency compliment from http://emergencycompliment.com/"""
+
+        if who is None:
+            who = msg.nick
+        json = urlopen("http://emergencycompliment.com/js/compliments.js").read()
+        compliments = simplejson.loads(re.search('(\[.+\])',json.replace("\n",'')).group(0))
+        text = random.choice(compliments)['phrase']
+        response = "%s: %s" % (who, text)
+        irc.reply(response, prefixNick=False)
+
+    compliment = wrap(compliment,[optional('text')])
+
 Class = Assorted
