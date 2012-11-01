@@ -1975,4 +1975,13 @@ class Assorted(callbacks.Privmsg):
 
     compliment = wrap(compliment,[optional('text')])
 
+    def sortinghat(self, irc, msg, args, who):
+        options = ['Gryffindor', 'Ravenclaw', 'Hufflepuff', 'Slytherin']
+        if who is None:
+            who = msg.nick
+        house = random.choice(options)
+        irc.reply('Hmm... %s... Let me see now... %s!' % (who, house.upper()), prefixNick=False)
+
+    sortinghat = wrap(sortinghat,[optional('text')])
+
 Class = Assorted
