@@ -406,7 +406,9 @@ class Translators(callbacks.Privmsg):
         """
         One does not simply call this plugin.
         """
-        irc.reply("One does not simply " + ' '.join(args), prefixNick=True)
+        string = ' '.join(args)
+        string = string[0].lower() + string[1:]
+        irc.reply("One does not simply " + string, prefixNick=True)
 
 Class = Translators
 
