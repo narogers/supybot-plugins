@@ -402,6 +402,14 @@ class Translators(callbacks.Privmsg):
       """ <text> - Say 'what' again. I double dare you. """
       irc.reply("%s, motherfucker, do you speak it?" % (' '.join(args)), prefixNick=False)
 
+    def mordor(self, irc, msg, args):
+        """
+        One does not simply call this plugin.
+        """
+        string = ' '.join(args)
+        string = string[0].lower() + string[1:]
+        irc.reply("One does not simply " + string, prefixNick=True)
+
 Class = Translators
 
 
