@@ -196,6 +196,13 @@ class Assorted(callbacks.Privmsg):
         twss = soup.find("h1")
         irc.reply(twss.string.encode('utf8'))
 
+    def hench(self, irc, msg, args):
+        """Generates an evil henchperson name from http://www.seventhsanctum.com/"""
+        html = urlopen("http://www.seventhsanctum.com/generate.php?Genname=evilnamer").read()
+        soup = BeautifulSoup(html)
+        name = soup.find('div', { 'id': 'colContent' }).find('h2').nextSibling.strip()
+        irc.reply(name.encode('utf8'))
+
     def luther(self, irc, msg, args):
         """Insults from Martin Luther, from http://ergofabulous.org/luther/"""
         html = urlopen("http://ergofabulous.org/luther/").read()
