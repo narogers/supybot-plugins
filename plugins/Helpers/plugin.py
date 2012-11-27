@@ -78,6 +78,8 @@ class Helpers(callbacks.Plugin):
         return False
 
     def add(self, irc, msg, args, channel, op):
+        """<op>
+        Add user <op> to the helpers list"""
         if self._calledByOwner(irc, msg, args):
         	if op in self._ops(channel):
         		irc.error("%s is already listed as a %s helper" % (op, channel), prefixNick=False)
@@ -89,6 +91,8 @@ class Helpers(callbacks.Plugin):
     add = wrap(add, ['channeldb', 'nick'])
 
     def remove(self, irc, msg, args, channel, op):
+        """<op>
+        Remove user <op> from the helpers list"""
         if self._calledByOwner(irc, msg, args):
             ids = [r.id for r in self.db.select(channel, lambda r: r.op == op)]
             if len(ids) == 0:
@@ -99,7 +103,9 @@ class Helpers(callbacks.Plugin):
             	irc.reply("The operation suceeded.", prefixNick=False)
     remove = wrap(remove, ['channeldb', 'nick'])
 
-    def helpers(self, irc, msg, args, opts, channel):
+    def list(self, irc, msg, args, opts, channel):
+        """[--all]
+        List channel members who are available to help navigate channel/conference/mailing list difficulties"""
     	ops = self._ops(channel)
     	if len(ops) == 0:
     		irc.reply("No channel helpers listed for %s" % channel)
@@ -121,7 +127,8 @@ class Helpers(callbacks.Plugin):
 	    	else:
 	    		irc.reply("%s: %s" % (prefix, ", ".join(ops)), prefixNick=False)
 
-    helpers = wrap(helpers, [getopts({'all':''}),'channeldb'])
+    list = wrap(list, [getopts({'all':''}),'channeldb'])
+    helpers = list
 
     def janitors(self, irc, msg, args, channel):
         if channel == '#code4lib':
