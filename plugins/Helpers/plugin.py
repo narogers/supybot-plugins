@@ -40,7 +40,7 @@ import supybot.dbi as dbi
 
 class Helpers(callbacks.Plugin):
     """
-    Channel staff list.  An ignorable alpha for now; see the evolving conversation at 
+    Channel helper list.  An ignorable alpha for now; see the evolving conversation at 
     https://github.com/code4lib/antiharassment-policy/issues/4#issuecomment-10747786 
     for details.
     """
@@ -80,29 +80,29 @@ class Helpers(callbacks.Plugin):
     def add(self, irc, msg, args, channel, op):
         if self._calledByOwner(irc, msg, args):
         	if op in self._ops(channel):
-        		irc.error("%s is already listed as %s staff" % (op, channel), prefixNick=False)
+        		irc.error("%s is already listed as a %s helper" % (op, channel), prefixNick=False)
         	elif op not in irc.state.channels[channel].users:
         		irc.error("User %s not found in %s" % (op, channel), prefixNick=False)
         	else:
         		self.db.add(channel, op)
-        		irc.reply("The operation succeeded. %s is now %s staff" % (op, channel), prefixNick=False)
+        		irc.reply("The operation succeeded. %s is now a %s helper" % (op, channel), prefixNick=False)
     add = wrap(add, ['channeldb', 'nick'])
 
     def remove(self, irc, msg, args, channel, op):
         if self._calledByOwner(irc, msg, args):
             ids = [r.id for r in self.db.select(channel, lambda r: r.op == op)]
             if len(ids) == 0:
-            	irc.error("%s is not on the %s staff" % (op, channel), prefixNick=False)
+            	irc.error("%s is not listed as a %s helper" % (op, channel), prefixNick=False)
             else:
             	for i in ids:
             		self.db.remove(channel, i)
             	irc.reply("The operation suceeded.", prefixNick=False)
     remove = wrap(remove, ['channeldb', 'nick'])
 
-    def staff(self, irc, msg, args, opts, channel):
+    def helpers(self, irc, msg, args, opts, channel):
     	ops = self._ops(channel)
     	if len(ops) == 0:
-    		irc.reply("No staff members listed for %s" % channel)
+    		irc.reply("No channel helpers listed for %s" % channel)
     	else:
 	    	current = True
 	    	for opt,arg in opts:
@@ -110,21 +110,25 @@ class Helpers(callbacks.Plugin):
 	    			current = False
 
 	    	if current:	
-	    		prefix = 'List of active %s staff (@help staff for details)' % channel
+	    		prefix = 'List of active %s helpers (@help helpers for details)' % channel
 	    		users = irc.state.channels[channel].users
 	    		ops = [op for op in ops if op in users]
 	    	else:
-	    		prefix = 'List of %s staff (@help staff for details)' % channel
+	    		prefix = 'List of %s helpers (@help helpers for details)' % channel
 
 	    	if len(ops) == 0:
-	    		irc.reply("No staff currently active in %s. Try again with --all to see all staff members." % channel)
+	    		irc.reply("No helpers currently active in %s. Try again with --all to see all registered channel helpers." % channel)
 	    	else:
 	    		irc.reply("%s: %s" % (prefix, ", ".join(ops)), prefixNick=False)
 
-    staff = wrap(staff, [getopts({'all':''}),'channeldb'])
+    helpers = wrap(helpers, [getopts({'all':''}),'channeldb'])
 
-    def janitors(self, irc, msg, args):
-        irc.reply("robcaSSon")
+    def janitors(self, irc, msg, args, channel):
+        if channel == '#code4lib':
+            irc.reply("The #code4lib janitor is robcaSSon", prefixNick=False)
+        else:
+            irc.reply("No janitors listed for %s" % (channel), prefixNick=False)
+    janitors = wrap(janitors, ['channeldb'])
         
 Class = Helpers
 
