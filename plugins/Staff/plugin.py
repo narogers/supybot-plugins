@@ -94,11 +94,11 @@ class Staff(callbacks.Plugin):
 	    			current = False
 
 	    	if current:	
-	    		prefix = 'List of active %s staff' % channel
+	    		prefix = 'List of active %s staff (@help staff for details)' % channel
 	    		users = irc.state.channels[channel].users
 	    		ops = [op for op in ops if op in users]
 	    	else:
-	    		prefix = 'List of %s staff' % channel
+	    		prefix = 'List of %s staff (@help staff for details)' % channel
 
 	    	if len(ops) == 0:
 	    		irc.reply("No staff currently active in %s. Try again with --all to see all staff members." % channel)
