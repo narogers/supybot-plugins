@@ -107,7 +107,9 @@ class Staff(callbacks.Plugin):
 
     staff = wrap(staff, [getopts({'all':''}),'channeldb'])
 
-
+    def janitors(self, irc, msg, args):
+        irc.reply("robcaSSon")
+        
 Class = Staff
 
 
