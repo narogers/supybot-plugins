@@ -28,7 +28,9 @@
 
 ###
 
+import supybot.conf as conf
 import supybot.utils as utils
+import supybot.ircdb as ircdb
 from supybot.commands import *
 import supybot.plugins as plugins
 import supybot.ircutils as ircutils
@@ -36,7 +38,7 @@ import supybot.callbacks as callbacks
 import supybot.dbi as dbi
 
 
-class Staff(callbacks.Plugin):
+class Helpers(callbacks.Plugin):
     """
     Channel staff list.  An ignorable alpha for now; see the evolving conversation at 
     https://github.com/code4lib/antiharassment-policy/issues/4#issuecomment-10747786 
@@ -54,7 +56,7 @@ class Staff(callbacks.Plugin):
                 return super(self.__class__, self).add(record)
                 
     def __init__(self, irc):
-        self.__parent = super(Staff, self)
+        self.__parent = super(Helpers, self)
         self.__parent.__init__(irc)
         self.db = plugins.DB(self.name(), {'flat': self.DB})()
 
@@ -63,24 +65,38 @@ class Staff(callbacks.Plugin):
     	result.sort()
     	return result
 
+    def _calledByOwner(self, irc, msg, args):
+        try:
+            u = ircdb.users.getUser(msg.prefix)
+        except KeyError:
+            irc.errorNotRegistered()
+        else:
+            if u._checkCapability('owner'):
+                return True
+            else:
+                irc.error(conf.supybot.replies.noCapability() % ('owner'), Raise=True)
+        return False
+
     def add(self, irc, msg, args, channel, op):
-    	if op in self._ops(channel):
-    		irc.error("%s is already listed as %s staff" % (op, channel), prefixNick=False)
-    	elif op not in irc.state.channels[channel].users:
-    		irc.error("User %s not found in %s" % (op, channel), prefixNick=False)
-    	else:
-    		self.db.add(channel, op)
-    		irc.reply("The operation succeeded. %s is now %s staff" % (op, channel), prefixNick=False)
+        if self._calledByOwner(irc, msg, args):
+        	if op in self._ops(channel):
+        		irc.error("%s is already listed as %s staff" % (op, channel), prefixNick=False)
+        	elif op not in irc.state.channels[channel].users:
+        		irc.error("User %s not found in %s" % (op, channel), prefixNick=False)
+        	else:
+        		self.db.add(channel, op)
+        		irc.reply("The operation succeeded. %s is now %s staff" % (op, channel), prefixNick=False)
     add = wrap(add, ['channeldb', 'nick'])
 
     def remove(self, irc, msg, args, channel, op):
-        ids = [r.id for r in self.db.select(channel, lambda r: r.op == op)]
-        if len(ids) == 0:
-        	irc.error("%s is not on the %s staff" % (op, channel), prefixNick=False)
-        else:
-        	for i in ids:
-        		self.db.remove(channel, i)
-        	irc.reply("The operation suceeded.", prefixNick=False)
+        if self._calledByOwner(irc, msg, args):
+            ids = [r.id for r in self.db.select(channel, lambda r: r.op == op)]
+            if len(ids) == 0:
+            	irc.error("%s is not on the %s staff" % (op, channel), prefixNick=False)
+            else:
+            	for i in ids:
+            		self.db.remove(channel, i)
+            	irc.reply("The operation suceeded.", prefixNick=False)
     remove = wrap(remove, ['channeldb', 'nick'])
 
     def staff(self, irc, msg, args, opts, channel):
@@ -110,7 +126,7 @@ class Staff(callbacks.Plugin):
     def janitors(self, irc, msg, args):
         irc.reply("robcaSSon")
         
-Class = Staff
+Class = Helpers
 
 
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
