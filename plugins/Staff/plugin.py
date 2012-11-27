@@ -37,7 +37,11 @@ import supybot.dbi as dbi
 
 
 class Staff(callbacks.Plugin):
-    """Channel staff lists."""
+    """
+    Channel staff list.  We're here to help; see the evolving conversation at 
+    https://github.com/code4lib/antiharassment-policy/issues/4#issuecomment-10747786 
+    for details.
+    """
 
     class DB(plugins.DbiChannelDB):
         class DB(dbi.DB):
