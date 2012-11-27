@@ -37,7 +37,7 @@ import supybot.dbi as dbi
 
 
 class Staff(callbacks.Plugin):
-    """Channel staff lists."""
+    """Channel staff lists. This is basically a joke that you can ignore."""
 
     class DB(plugins.DbiChannelDB):
         class DB(dbi.DB):
