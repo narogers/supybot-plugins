@@ -2008,4 +2008,7 @@ class Assorted(callbacks.Privmsg):
 
     sortinghat = wrap(sortinghat,[optional('text')])
 
+    def helperz(self, irc, msg, args, who):
+        irc.reply("What, I'm chopped liver?!")
+
 Class = Assorted
