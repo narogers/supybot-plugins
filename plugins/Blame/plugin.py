@@ -73,7 +73,7 @@ class Blame(plugins.ChannelIdDatabasePlugin):
         else:
             blame = self.db.random(channel)
             if not blame:
-                irc.error(format('There are no blamess in my database ' \
+                irc.error(format('There are no blames in my database ' \
                                  'for %s.', channel))
                 return
         text = self._replaceFirstPerson(blame.text, msg.nick)

@@ -14,7 +14,7 @@ from cgi import parse_qs
 from datetime import date, datetime
 from elementtidy import TidyHTMLTreeBuilder
 from int2word import int2word
-from random import randint, choice
+from random import randint, choice, seed
 from urllib import quote, urlencode
 from urllib2 import urlopen, urlparse, Request, build_opener, HTTPError
 from urlparse import urlparse
@@ -990,12 +990,16 @@ class Assorted(callbacks.Privmsg):
           if opt == 'raw':
             prefix = ""
             
+        seed(choices)
+
         pattern = re.compile('\s+or\s+', re.I)
         clist = re.split(pattern, choices)
         if randint(0, 10) == 0:
             irc.reply("That's a tough one...")
             return
         irc.reply(prefix + clist[randint(0, len(clist)-1)])
+
+        seed()
 
     decide = wrap(decide, [getopts({'raw':''}),'text'])
 
@@ -2003,5 +2007,8 @@ class Assorted(callbacks.Privmsg):
         irc.reply('Hmm... %s... Let me see now... %s!' % (who, house.upper()), prefixNick=False)
 
     sortinghat = wrap(sortinghat,[optional('text')])
+
+    def helperz(self, irc, msg, args, who):
+        irc.reply("Translation Party is hiring, you know.")
 
 Class = Assorted
