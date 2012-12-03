@@ -410,6 +410,30 @@ class Translators(callbacks.Privmsg):
         string = string[0].lower() + string[1:]
         irc.reply("One does not simply " + string, prefixNick=True)
 
+    def baconator(self, irc, msg, args):
+        """
+        random baconification
+        """
+        if len(args) == 0:
+            irc.reply("Only people who supply strings get bacon.")
+            return
+        words = []
+        token_positions = []
+        i = 0
+        for arg in args:
+            for s in arg.split():
+                words.append(s)
+                if s.strip(r'`!()-{}[]<>"\':;.,?').lower() not in STOPWORDS:
+                    token_positions.append(i)
+                i += 1
+        try:
+            randidx = randrange(len(token_positions))
+            words[token_positions[randidx]] = "bacon"
+        except:
+            # all stopwords
+            pass
+        irc.reply(' '.join(words))
+    
 Class = Translators
 
 
