@@ -138,5 +138,10 @@ class TrueTrue(callbacks.PluginRegexp):
         time.sleep(2)
         irc.reply('sobs', action=True, prefixNick=False)
 
+    def marcoSnarfer(self, irc, msg, match):
+        r'\bmarco\b' 
+        time.sleep(2)
+        irc.reply('POLO!', action=False, prefixNick=True)
+
             
 Class = TrueTrue
