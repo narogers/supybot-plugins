@@ -7,7 +7,7 @@ class TrueTrue(callbacks.PluginRegexp):
                'coughSnarfer', 'metadataSnarfer', 'crueSnarfer', 'knockSnarfer',
                'panizziSnarfer', 'opacSnarfer', 'yawnSnarfer', 'callMeSomething',
                'snortSnarfer', 'sobSnarfer', 'hollaBackSnarfer',
-               'hornsSnarfer',
+               'hornsSnarfer', 'marcoSnarfer',
                # 'youRangSnarfer', 'billSnarfer', 'hehSnarfer'
                ] 
 
