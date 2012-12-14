@@ -767,10 +767,10 @@ class Assorted(callbacks.Privmsg):
         irc.reply("|          |‧", prefixNick=False)
         irc.reply("I win!", prefixNick=False)
 
-    def tard(self, irc, msg, args):
+    def grumpycat(self, irc, msg, args):
         irc.reply("  ^  ^  ", prefixNick=False)
         irc.reply("  .  .  ", prefixNick=False)
-        irc.reply(">  n <  ", prefixNick=False)
+        irc.reply(" > n <  ", prefixNick=False)
         irc.reply("        ", prefixNick=False)
         irc.reply("  NO    ", prefixNick=False)
       
