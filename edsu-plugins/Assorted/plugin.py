@@ -766,6 +766,13 @@ class Assorted(callbacks.Privmsg):
         irc.reply("|    ‧     |", prefixNick=False)
         irc.reply("|          |‧", prefixNick=False)
         irc.reply("I win!", prefixNick=False)
+
+    def tard(self, irc, msg, args):
+        irc.reply("  ^  ^  ", prefixNick=False)
+        irc.reply("  .  .  ", prefixNick=False)
+        irc.reply(">  n <  ", prefixNick=False)
+        irc.reply("        ", prefixNick=False)
+        irc.reply("  NO    ", prefixNick=False)
       
     def stab(self, irc, msg, args):
       irc.reply("o()xxxx[{::::::*" + ' '.join(args) + "*::::::>", prefixNick=False)
