@@ -40,6 +40,7 @@ import supybot.conf as conf
 
 
 filename = conf.supybot.directories.data.dirize('Greeter.db')
+joinmsg = "Welcome to code4lib! Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers for a list of people in channel who can help."
 
 # drawn in part from Herald and Seen
 class GreeterDB(plugins.ChannelUserDB):
@@ -51,10 +52,9 @@ class GreeterDB(plugins.ChannelUserDB):
     
     #def add(self, channel, nick):
     #    self[channel, nick] = 1         
-        
+
 class Greeter(callbacks.Plugin):
-    """This plugin should greet people in channel
-    """
+    """This plugin should greet people in channel"""
     threaded = True
 
     def __init__(self, irc):
@@ -71,11 +71,12 @@ class Greeter(callbacks.Plugin):
         #irc.reply("hello")
         if ircutils.strEqual(irc.nick, msg.nick):
             return # It's us
-        irc.queueMsg(ircmsgs.privmsg(msg.nick, "Hello %s" % msg.nick))
+        irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
         irc.noReply()
 
         
     def doJoin(self, irc, msg):
+
         #irc.reply("hello")
         if ircutils.strEqual(irc.nick, msg.nick):
             return # It's us
@@ -83,11 +84,10 @@ class Greeter(callbacks.Plugin):
         channel = msg.args[0]
 
         #if self.db[channel, msg.nick] is None:
-        seenbefore = 0
         try:
             self.db[channel, msg.nick]
         except KeyError:
-            irc.queueMsg(ircmsgs.privmsg(msg.nick, "Hello %s" % msg.nick))
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
             irc.noReply()
             #self.db.add(channel, msg.nick)
             self.db[channel, msg.nick] = 1
