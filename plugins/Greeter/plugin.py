@@ -33,14 +33,30 @@ from supybot.commands import *
 import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
-
+import supybot.ircmsgs as ircmsgs
 
 class Greeter(callbacks.Plugin):
-    """Add the help for "@plugin help Greeter" here
-    This should describe *how* to use this plugin."""
+    """This plugin should greet peopel in channel
+    """
     threaded = True
+    
+    def greeter(self, irc, msg, args):
+        """ playing around with this """
+        #irc.reply("hello")
+        if ircutils.strEqual(irc.nick, msg.nick):
+            return # It's us
+        irc.queueMsg(ircmsgs.privmsg(msg.nick, "Hello %s" % msg.nick))
+        irc.noReply()
 
+        
+    def doJoin(self, irc, msg):
+        #irc.reply("hello")
+        if ircutils.strEqual(irc.nick, msg.nick):
+            return # It's us
+        irc.queueMsg(ircmsgs.privmsg(msg.nick, "Hello %s" % msg.nick))
+        irc.noReply()
 
+        
 Class = Greeter
 
 
