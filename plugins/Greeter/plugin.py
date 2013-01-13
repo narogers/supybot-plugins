@@ -25,8 +25,10 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-
+#
 ###
+
+
 
 import supybot.utils as utils
 from supybot.commands import *
@@ -34,11 +36,35 @@ import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 import supybot.ircmsgs as ircmsgs
+import supybot.conf as conf
 
+
+filename = conf.supybot.directories.data.dirize('Greeter.db')
+
+# drawn in part from Herald and Seen
+class GreeterDB(plugins.ChannelUserDB):
+    def serialize(self, v):
+        return [v]
+    
+    def deserialize(self, channel, id, L):
+        return L[0]
+    
+    #def add(self, channel, nick):
+    #    self[channel, nick] = 1         
+        
 class Greeter(callbacks.Plugin):
-    """This plugin should greet peopel in channel
+    """This plugin should greet people in channel
     """
     threaded = True
+
+    def __init__(self, irc):
+        # these two lines necessary or goes kabloomie
+        self.__parent = super(Greeter, self)
+        self.__parent.__init__(irc)
+        self.db = GreeterDB(filename)
+
+    def die(self):
+        self.db.close()
     
     def greeter(self, irc, msg, args):
         """ playing around with this """
@@ -53,10 +79,19 @@ class Greeter(callbacks.Plugin):
         #irc.reply("hello")
         if ircutils.strEqual(irc.nick, msg.nick):
             return # It's us
-        irc.queueMsg(ircmsgs.privmsg(msg.nick, "Hello %s" % msg.nick))
-        irc.noReply()
 
-        
+        channel = msg.args[0]
+
+        #if self.db[channel, msg.nick] is None:
+        seenbefore = 0
+        try:
+            self.db[channel, msg.nick]
+        except KeyError:
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, "Hello %s" % msg.nick))
+            irc.noReply()
+            #self.db.add(channel, msg.nick)
+            self.db[channel, msg.nick] = 1
+ 
 Class = Greeter
 
 
