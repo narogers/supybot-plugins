@@ -10,6 +10,8 @@ NEED TO DO
 
 * Add add/remove from database
 
+* change @helpers to @helpers #code4lib
+
 NICE TO DO
 * make generic, pull message from config for channel
 * db per channel
