@@ -37,7 +37,7 @@ import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 import supybot.ircmsgs as ircmsgs
 import supybot.conf as conf
-
+import re 
 
 filename = conf.supybot.directories.data.dirize('Greeter.db')
 joinmsg = "Welcome to code4lib! Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers for a list of people in channel who can help."
@@ -73,7 +73,6 @@ class Greeter(callbacks.Plugin):
             return # It's us
         irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
         irc.noReply()
-
         
     def doJoin(self, irc, msg):
 
@@ -85,13 +84,20 @@ class Greeter(callbacks.Plugin):
 
         #if self.db[channel, msg.nick] is None:
         try:
-            self.db[channel, msg.nick]
+            self.db[channel, self.normalizeNick(msg.nick)]
         except KeyError:
             irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
             irc.noReply()
             #self.db.add(channel, msg.nick)
-            self.db[channel, msg.nick] = 1
- 
+            self.db[channel, self.normalizeNick(msg.nick)] = 1
+
+    #might need a method to normalize all nicks in the db
+    def normalizeNick(self, nick):
+        normNick = re.sub('_*$','',nick) ;
+        normNick = re.sub('_mtg$','',normNick)
+        normNick = re.sub('_away$','',normNick)
+        return normNick
+            
 Class = Greeter
 
 
