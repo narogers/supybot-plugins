@@ -50,9 +50,23 @@ class GreeterDB(plugins.ChannelUserDB):
     def deserialize(self, channel, id, L):
         return L[0]
     
-    #def add(self, channel, nick):
-    #    self[channel, nick] = 1         
+    def add(self, channel, nick):
+        self[channel, self.normalizeNick(nick)] = 1         
 
+    def remove(self, channel, nick):
+        del self[channel, self.normalizeNick(nick)]
+        
+    #might need a method to normalize all nicks in the db
+    def normalizeNick(self, nick):
+        normNick = re.sub('_*$','',nick) ;
+        normNick = re.sub('_mtg$','',normNick)
+        normNick = re.sub('_away$','',normNick)
+        return normNick
+
+    def get(self,channel,nick):
+        return self[channel,self.normalizeNick(nick)]
+        
+        
 class Greeter(callbacks.Plugin):
     """This plugin should greet people in channel"""
     threaded = True
@@ -86,19 +100,13 @@ class Greeter(callbacks.Plugin):
         
         #if self.db[channel, msg.nick] is None:
         try:
-            self.db[channel, self.normalizeNick(msg.nick)]
+            self.db.get(channel, msg.nick)
         except KeyError:
             irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
             irc.noReply()
             #self.db.add(channel, msg.nick)
-            self.db[channel, self.normalizeNick(msg.nick)] = 1
+            self.db.add(channel, msg.nick) 
 
-    #might need a method to normalize all nicks in the db
-    def normalizeNick(self, nick):
-        normNick = re.sub('_*$','',nick) ;
-        normNick = re.sub('_mtg$','',normNick)
-        normNick = re.sub('_away$','',normNick)
-        return normNick
             
 Class = Greeter
 
