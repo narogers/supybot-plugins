@@ -3,11 +3,12 @@ DONE
         * Add normalization routine for nicks (_,__,___ all map to same person, etc)
         * only work for code4lib
 
-        * Add add/remove from database
 
 NEED TO DO
 
 * hardcoded list of people to ingore?  (or if some way to add to db if file is created)
+
+* Add add/remove from database
 
 NICE TO DO
 * make generic, pull message from config for channel
