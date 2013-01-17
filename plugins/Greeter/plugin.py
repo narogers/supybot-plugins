@@ -81,7 +81,9 @@ class Greeter(callbacks.Plugin):
             return # It's us
 
         channel = msg.args[0]
-
+        if channel != "#code4lib" and channel != "#jtgtestchannel":
+            return
+        
         #if self.db[channel, msg.nick] is None:
         try:
             self.db[channel, self.normalizeNick(msg.nick)]
