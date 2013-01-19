@@ -78,16 +78,56 @@ class Greeter(callbacks.Plugin):
         self.db = GreeterDB(filename)
 
     def die(self):
-        self.db.close()
-    
-    def greeter(self, irc, msg, args):
-        """ playing around with this """
-        #irc.reply("hello")
-        if ircutils.strEqual(irc.nick, msg.nick):
-            return # It's us
-        irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
-        irc.noReply()
+        self.db.close()    
+
+
         
+    def greeter(self, irc, msg, args):
+        """ if no commands, greet nick of caller. if args[0] is add/remove, try doing action w/ nicks that follo """
+
+        channel = msg.args[0]
+        
+        #irc.reply("hello")
+        if len(args) == 0:
+            if ircutils.strEqual(irc.nick, msg.nick):
+                return # It's us
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
+            irc.noReply()
+        elif args[0] == 'remove':
+            channel = msg.args[0]
+            nicks = args[1:]
+            removedNicks = []
+
+            for nick in nicks:
+                try:
+                    self.db.remove(channel,nick)
+                    removedNicks.append( nick )
+                except KeyError:
+                    #irc.queueMsg(nick + " was not in db ")
+                    #irc.noReply()
+                    irc.reply(nick + " was not in db ")
+                    
+            if len( removedNicks ) > 0:
+                #irc.queueMsg("Removed " + ", ".join( removedNicks ))
+                #irc.noReply()
+                irc.reply("Removed " + ", ".join( removedNicks ))
+
+        elif args[0] == 'add':
+            addedNicks = []
+            for nick in args[1:]:
+                self.db.add(channel,nick)
+                addedNicks.append( nick )
+
+            irc.reply("Added " + ", ".join( addedNicks ))
+            #irc.noReply()
+
+        else:
+            # should see if htere's a way to trigger help message
+            irc.reply(" I don't understand what you are asking ")
+            #irc.queueMsg(" I don't understand what you are asking ")
+            #irc.noReply()
+                    
+            
     def doJoin(self, irc, msg):
 
         #irc.reply("hello")
