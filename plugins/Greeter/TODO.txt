@@ -5,15 +5,19 @@ DONE
 
 	* Add add/remove from database
 
+	* hardcoded list of people to ingore?  (or if some way to add to db if file is created)
+
+
+	* change @helpers to @helpers #code4lib
+
 NEED TO DO
 
-	* hardcoded list of people to ingore?  (or if some way to add to db if file is created)
 
 	* better help message
 
-	* change @helpers to @helpers #code4lib
 
 NICE TO DO
 * make generic, pull message from config for channel
 * db per channel
-* handle string of nicks better.  (ie foo, bar,).  
+* handle string of nicks better.  (ie foo, bar,). 
+* make ignore list part of configuration or separate file 

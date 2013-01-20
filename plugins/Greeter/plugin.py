@@ -81,6 +81,15 @@ class Greeter(callbacks.Plugin):
         self.__parent.__init__(irc)
         self.db = GreeterDB(filename)
 
+        # I should pull this out into supybot.conf
+        # but nervous about having to alter the supybot.conf
+        # just for this plugin
+        # so...for short term ...
+
+        c4lIgnoredNicks = []
+        for ignore in c4lIgnoredNicks:
+            self.db.add('#code4lib', ignore)
+        
     def die(self):
         self.db.close()    
 
@@ -97,10 +106,10 @@ class Greeter(callbacks.Plugin):
                 badNicks.append( nick )
                 
         if len( badNicks ) > 0:
-            irc.reply("Nicks not in database " + ", ". join( badNicks) )
+            irc.reply("Nicks not in database: " + ", ". join( badNicks) )
 
         if len( removedNicks ) > 0:
-            irc.reply("Removed " + ", ".join( removedNicks ))
+            irc.reply("Removed: " + ", ".join( removedNicks ))
 
     def __add(self, irc, channel, nicks):
 
@@ -110,7 +119,7 @@ class Greeter(callbacks.Plugin):
             self.db.add(channel,nick)
             addedNicks.append( nick )
             
-        irc.reply("Added " + ", ".join( addedNicks ))
+        irc.reply("Added: " + ", ".join( addedNicks ))
             
                 
     def greeter(self, irc, msg, args):
