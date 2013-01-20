@@ -10,10 +10,11 @@ DONE
 
 	* change @helpers to @helpers #code4lib
 
+
+	* better help message
 NEED TO DO
 
 
-	* better help message
 
 
 NICE TO DO
