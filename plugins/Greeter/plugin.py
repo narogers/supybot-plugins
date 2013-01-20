@@ -58,13 +58,13 @@ class GreeterDB(plugins.ChannelUserDB):
         
     #might need a method to normalize all nicks in the db
     def normalizeNick(self, nick):
-        normNick = re.sub('_*$','',nick) ;
-        normNick = re.sub('_mtg$','',normNick)
-        normNick = re.sub('_away$','',normNick)
-        normNick = re.sub('_lunch$',''normNick)
-        normNick = re.sub('_dinner$',''normNick)
-        normNick = re.sub('_break$',''normNick)
-        normNick = re.sub('_supper$',''normNick)
+        normNick = re.sub('_*$',      '', nick) ;
+        normNick = re.sub('_mtg$',    '', normNick)
+        normNick = re.sub('_away$',   '', normNick)
+        normNick = re.sub('_lunch$',  '', normNick)
+        normNick = re.sub('_dinner$', '', normNick)
+        normNick = re.sub('_break$',  '', normNick)
+        normNick = re.sub('_supper$', '', normNick)
         return normNick
 
     def get(self,channel,nick):
