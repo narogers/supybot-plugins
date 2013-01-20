@@ -40,7 +40,7 @@ import supybot.conf as conf
 import re 
 
 filename = conf.supybot.directories.data.dirize('Greeter.db')
-joinmsg = "Welcome to code4lib! Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers for a list of people in channel who can help."
+joinmsg = "Welcome to code4lib! Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers #code4lib for a list of people in channel who can help."
 
 # drawn in part from Herald and Seen
 class GreeterDB(plugins.ChannelUserDB):
