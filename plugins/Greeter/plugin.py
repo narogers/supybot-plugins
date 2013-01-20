@@ -80,10 +80,40 @@ class Greeter(callbacks.Plugin):
     def die(self):
         self.db.close()    
 
+    # apparently having remove and add in their own defs
+    # makes then "available" as their own plugins.  IE
+    # @remove and @add, don't want that..
+    def __remove(self, irc, channel, nicks):
 
+        removedNicks = []
+        badNicks     = []
         
+        for nick in nicks:
+            try:
+                self.db.remove(channel,nick)
+                removedNicks.append( nick )
+            except KeyError:
+                badNicks.append( nick )
+                
+        if len( badNicks ) > 0:
+            irc.reply("Nicks not in database " + ", ". join( badNicks) )
+
+        if len( removedNicks ) > 0:
+            irc.reply("Removed " + ", ".join( removedNicks ))
+
+    def __add(self, irc, channel, nicks):
+
+        addedNicks = []
+                
+        for nick in nicks:
+            self.db.add(channel,nick)
+            addedNicks.append( nick )
+            
+        irc.reply("Added " + ", ".join( addedNicks ))
+            
+                
     def greeter(self, irc, msg, args):
-        """ if no commands, greet nick of caller. if args[0] is add/remove, try doing action w/ nicks that follo """
+        """ if no commands, greet nick of caller. if args[0] is add orremove, try doing that action w/ nicks that follow (separated by a space) """
 
         channel = msg.args[0]
         
@@ -94,39 +124,14 @@ class Greeter(callbacks.Plugin):
             irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
             irc.noReply()
         elif args[0] == 'remove':
-            channel = msg.args[0]
-            nicks = args[1:]
-            removedNicks = []
-
-            for nick in nicks:
-                try:
-                    self.db.remove(channel,nick)
-                    removedNicks.append( nick )
-                except KeyError:
-                    #irc.queueMsg(nick + " was not in db ")
-                    #irc.noReply()
-                    irc.reply(nick + " was not in db ")
-                    
-            if len( removedNicks ) > 0:
-                #irc.queueMsg("Removed " + ", ".join( removedNicks ))
-                #irc.noReply()
-                irc.reply("Removed " + ", ".join( removedNicks ))
-
+            self.__remove(irc, channel, args[1:])
         elif args[0] == 'add':
-            addedNicks = []
-            for nick in args[1:]:
-                self.db.add(channel,nick)
-                addedNicks.append( nick )
-
-            irc.reply("Added " + ", ".join( addedNicks ))
-            #irc.noReply()
+            self.__add(irc, channel, args[1:])
 
         else:
             # should see if htere's a way to trigger help message
             irc.reply(" I don't understand what you are asking ")
-            #irc.queueMsg(" I don't understand what you are asking ")
-            #irc.noReply()
-                    
+                                
             
     def doJoin(self, irc, msg):
 
