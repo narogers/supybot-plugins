@@ -61,6 +61,10 @@ class GreeterDB(plugins.ChannelUserDB):
         normNick = re.sub('_*$','',nick) ;
         normNick = re.sub('_mtg$','',normNick)
         normNick = re.sub('_away$','',normNick)
+        normNick = re.sub('_lunch$',''normNick)
+        normNick = re.sub('_dinner$',''normNick)
+        normNick = re.sub('_break$',''normNick)
+        normNick = re.sub('_supper$',''normNick)
         return normNick
 
     def get(self,channel,nick):
@@ -80,9 +84,6 @@ class Greeter(callbacks.Plugin):
     def die(self):
         self.db.close()    
 
-    # apparently having remove and add in their own defs
-    # makes then "available" as their own plugins.  IE
-    # @remove and @add, don't want that..
     def __remove(self, irc, channel, nicks):
 
         removedNicks = []
@@ -118,6 +119,12 @@ class Greeter(callbacks.Plugin):
         channel = msg.args[0]
         
         #irc.reply("hello")
+
+        # apparently having remove and add in their own defs
+        # makes then "available" as their own plugins.  IE
+        # @remove and @add, don't want that, so having the
+        # @greeter part do the add/remove via private methods
+        
         if len(args) == 0:
             if ircutils.strEqual(irc.nick, msg.nick):
                 return # It's us
