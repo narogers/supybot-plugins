@@ -123,11 +123,12 @@ class Greeter(callbacks.Plugin):
             
                 
     def greeter(self, irc, msg, args):
-        """ if no commands, greet nick of caller. if args[0] is add orremove, try doing that action w/ nicks that follow (separated by a space) """
+        """ (add|remove) nick1 [nick2 nick3...]
+           This plugin will issue a greeting via privmesg for the first time someone joins a channel. Doing greeter add foobar would cause that nick to be added to the list of nicks to ignore.
+           If called without arguments, will send the caller the introduction message via privmesg.  """
 
         channel = msg.args[0]
         
-        #irc.reply("hello")
 
         # apparently having remove and add in their own defs
         # makes then "available" as their own plugins.  IE
