@@ -44,7 +44,7 @@ filename = conf.supybot.directories.data.dirize('Greeter.db')
 # ok, could use {} to replace channel and have a
 # generic method and have code4lib be a more specific one
 
-joinmsg = "Welcome to #code4lib! I'm {}, the channel bot. Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers #code4lib for a list of people in channel who can help."
+joinmsg = "Welcome to #code4lib! I'm %s, the channel bot. Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers #code4lib for a list of people in channel who can help."
 
 # drawn in part from Herald and Seen
 class GreeterDB(plugins.ChannelUserDB):
@@ -155,7 +155,7 @@ class Greeter(callbacks.Plugin):
         if len(args) == 0:
             if ircutils.strEqual(irc.nick, msg.nick):
                 return # It's us
-            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg.format( irc.nick )))
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg % ( irc.nick ) ))
             irc.noReply()
 
         else:
@@ -177,7 +177,7 @@ class Greeter(callbacks.Plugin):
         try:
             self.db.get(channel, msg.nick)
         except KeyError:
-            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg.format( irc.nick ) ))
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg % ( irc.nick ) ))
             irc.noReply()
             #self.db.add(channel, msg.nick)
             self.db.add(channel, msg.nick) 
