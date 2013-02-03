@@ -40,7 +40,11 @@ import supybot.conf as conf
 import re 
 
 filename = conf.supybot.directories.data.dirize('Greeter.db')
-joinmsg = "Welcome to code4lib! Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers #code4lib for a list of people in channel who can help."
+
+# ok, could use {} to replace channel and have a
+# generic method and have code4lib be a more specific one
+
+joinmsg = "Welcome to #code4lib! I'm {}, the channel bot. Visit http://code4lib.org/irc to find out more about this channel.  Type @helpers #code4lib for a list of people in channel who can help."
 
 # drawn in part from Herald and Seen
 class GreeterDB(plugins.ChannelUserDB):
@@ -92,8 +96,14 @@ class Greeter(callbacks.Plugin):
         
     def die(self):
         self.db.close()    
+    
+    def remove(self, irc, msg, args):
+        """ remove nick1 [nick2 nick3...]
+           Remove nicks from database. Next time nick logs into channel, they will be greeted again by privmesg with the channel message.
+        """
 
-    def __remove(self, irc, channel, nicks):
+        channel = msg.args[0]
+        nicks = args 
 
         removedNicks = []
         badNicks     = []
@@ -111,8 +121,15 @@ class Greeter(callbacks.Plugin):
         if len( removedNicks ) > 0:
             irc.reply("Removed: " + ", ".join( removedNicks ))
 
-    def __add(self, irc, channel, nicks):
+    def add(self, irc, msg, args):
 
+        """ add nick1 [nick2 nick3...]
+           This will add the supplied nicks to the ignore list. If they have not visited channel, they will not be greeted. Useful for variations of nicks that may not be ignored.  """
+
+        
+        channel = msg.args[0]
+        nicks = args 
+        
         addedNicks = []
                 
         for nick in nicks:
@@ -124,8 +141,8 @@ class Greeter(callbacks.Plugin):
                 
     def greeter(self, irc, msg, args):
         """ (add|remove) nick1 [nick2 nick3...]
-           This plugin will issue a greeting via privmesg for the first time someone joins a channel. Doing greeter add foobar would cause that nick to be added to the list of nicks to ignore.
-           If called without arguments, will send the caller the introduction message via privmesg.  """
+           This plugin will issue a greeting via privmesg for the first time someone joins a channel. Doing greeter add foobar would cause that nick to be added to the list of nicks to ignore. Remove command will remove them from the list of nicks to ignore.
+           If called without arguments, will send the caller the introduction message via privmesg, regardless of whether they've already been greeted.  """
 
         channel = msg.args[0]
         
@@ -138,12 +155,8 @@ class Greeter(callbacks.Plugin):
         if len(args) == 0:
             if ircutils.strEqual(irc.nick, msg.nick):
                 return # It's us
-            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg.format( irc.nick )))
             irc.noReply()
-        elif args[0] == 'remove':
-            self.__remove(irc, channel, args[1:])
-        elif args[0] == 'add':
-            self.__add(irc, channel, args[1:])
 
         else:
             # should see if htere's a way to trigger help message
@@ -164,7 +177,7 @@ class Greeter(callbacks.Plugin):
         try:
             self.db.get(channel, msg.nick)
         except KeyError:
-            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg))
+            irc.queueMsg(ircmsgs.privmsg(msg.nick, joinmsg.format( irc.nick ) ))
             irc.noReply()
             #self.db.add(channel, msg.nick)
             self.db.add(channel, msg.nick) 
