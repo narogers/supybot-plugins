@@ -42,7 +42,8 @@ class Fixit(callbacks.Plugin):
                'beans', 'analytics', 'bitcoin', 'test harness', 
                'unit tests', 'dependency', 'QR codes', 'plugin','backend',
                'frontend','middleware','CAS', 'robots', 'robots.txt',
-               'hackfest', 'encoding', 'utf8', 'MARC8',
+               'hackfest', 'encoding', 'utf8', 'MARC8', 'pumpkins', 
+               'pumpkin patch',
       ]
       
       verb = choice(verbs)
