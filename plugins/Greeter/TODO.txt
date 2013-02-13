@@ -1,0 +1,24 @@
+DONE
+
+        * Add normalization routine for nicks (_,__,___ all map to same person, etc)
+        * only work for code4lib
+
+	* Add add/remove from database
+
+	* hardcoded list of people to ingore?  (or if some way to add to db if file is created)
+
+
+	* change @helpers to @helpers #code4lib
+
+
+	* better help message
+NEED TO DO
+
+
+
+
+NICE TO DO
+* make generic, pull message from config for channel
+* db per channel
+* handle string of nicks better.  (ie foo, bar,). 
+* make ignore list part of configuration or separate file 
