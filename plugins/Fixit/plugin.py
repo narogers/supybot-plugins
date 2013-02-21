@@ -20,7 +20,7 @@ class Fixit(callbacks.Plugin):
                'open-source', 'havisham', 'refactor', 'empower',
                'continuously deploy', 'inject', 'mock', 'BBM me',
                'face-time', 'migrate', 'nextgen', 'panoramically photograph',
-               'SMS', 'shibbolize', 'hack', 'munge', 'yak-shave',
+               'SMS', 'shibbolize', 'hack', 'munge', 'yak-shave', 'rebase'
       ]
       
       nouns = ['framework', 'html5', 'rubygem', 'shawarma', 'web app', 
