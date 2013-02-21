@@ -20,7 +20,9 @@ class Fixit(callbacks.Plugin):
                'open-source', 'havisham', 'refactor', 'empower',
                'continuously deploy', 'inject', 'mock', 'BBM me',
                'face-time', 'migrate', 'nextgen', 'panoramically photograph',
-               'SMS', 'shibbolize', 'hack', 'munge', 'yak-shave', 'rebase'
+               'SMS', 'shibbolize', 'hack', 'munge', 'yak-shave', 'rebase',
+               'polish', 'fastfail', 'serialize', 'queue up', 'shard',
+               'replicate', 'index', 'transliterate'
       ]
       
       nouns = ['framework', 'html5', 'rubygem', 'shawarma', 'web app', 
@@ -43,7 +45,8 @@ class Fixit(callbacks.Plugin):
                'unit tests', 'dependency', 'QR codes', 'plugin','backend',
                'frontend','middleware','CAS', 'robots', 'robots.txt',
                'hackfest', 'encoding', 'utf8', 'MARC8', 'pumpkins', 
-               'pumpkin patch',
+               'pumpkin patch', 'turd', 'web hook', 'callback', 'shard',
+               'hydra head', 'fulltext', 'diacritics'
       ]
       
       verb = choice(verbs)
