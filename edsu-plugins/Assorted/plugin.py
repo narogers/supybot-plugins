@@ -1022,23 +1022,23 @@ class Assorted(callbacks.Privmsg):
 
     pick = wrap(pick, ['text'])
 
-    def _url2soup(self, url, qsdata={}, postdata=None, headers={}):
-        """
-        Fetch a url and BeautifulSoup-ify the returned doc
-        """
-        ua = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.11) Gecko/20071204 Ubuntu/7.10 (gutsy) Firefox/2.0.0.11'
-        headers.update({'User-Agent': ua})
-        params = urlencode(qsdata)
-        if params:
-            if '?' in url:
-                url = "%s&%s" % (url,params)
-            else:
-                url = "%s?%s" % (url,params)
-        req = Request(url,postdata,headers)
-        doc = urlopen(req)
-        data = doc.read()
-        soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        return soup
+def _url2soup(self, url, qsdata={}, postdata=None, headers={}):
+    """
+    Fetch a url and BeautifulSoup-ify the returned doc
+    """
+    ua = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.11) Gecko/20071204 Ubuntu/7.10 (gutsy) Firefox/2.0.0.11'
+    headers.update({'User-Agent': ua})
+    params = urlencode(qsdata)
+    if params:
+        if '?' in url:
+            url = "%s&%s" % (url,params)
+        else:
+            url = "%s?%s" % (url,params)
+    req = Request(url,postdata,headers)
+    doc = urlopen(req)
+    data = doc.read()
+    soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
+    return soup
 
     def coffee(self, irc, msg, args):
         """
@@ -1056,6 +1056,25 @@ class Assorted(callbacks.Privmsg):
         else:
             nick = msg.nick
         irc.reply("brews and pours a cup of %s, and sends it sliding down the bar to %s" % (coffee, nick), action=True)
+
+
+
+    def tea(self, irc, msg, args):
+        """
+        makes and pours a sensational cup of tea from the highest rated
+        teas at http://ratetea.com/highest_rated_teas.php
+        """
+        soup = self._url2soup('http://ratetea.com/highest_rated_teas.php')
+        rows = soup.findAll('tr')[1:]
+        teas = [t.a for t in rows]
+        tea = teas[randint(0, len(teas))]
+        tea_name = tea.string 
+        tea_url = "http://ratetea.com/" + tea['href']
+        if len(args) > 0:
+            nick = ' '.join(args)
+        else:
+            nick = msg.nick
+        irc.reply("brews and pours a pot of %s, and sends it sliding down the bar to %s (%s)" % (tea_name, nick, tea_url), action=True)
 
     def bartender(self, irc, msg, args):
         """
