@@ -1069,7 +1069,7 @@ class Assorted(callbacks.Privmsg):
         teas = [t.a for t in rows]
         tea = teas[randint(0, len(teas))]
         tea_name = tea.string 
-        tea_url = "http://ratetea.com/" + tea['href']
+        tea_url = "http://ratetea.com" + tea['href']
         if len(args) > 0:
             nick = ' '.join(args)
         else:
