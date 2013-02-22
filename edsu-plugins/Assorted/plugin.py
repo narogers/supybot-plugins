@@ -1022,23 +1022,23 @@ class Assorted(callbacks.Privmsg):
 
     pick = wrap(pick, ['text'])
 
-def _url2soup(self, url, qsdata={}, postdata=None, headers={}):
-    """
-    Fetch a url and BeautifulSoup-ify the returned doc
-    """
-    ua = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.11) Gecko/20071204 Ubuntu/7.10 (gutsy) Firefox/2.0.0.11'
-    headers.update({'User-Agent': ua})
-    params = urlencode(qsdata)
-    if params:
+    def _url2soup(self, url, qsdata={}, postdata=None, headers={}):
+        """
+        Fetch a url and BeautifulSoup-ify the returned doc
+        """
+        ua = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.11) Gecko/20071204 Ubuntu/7.10 (gutsy) Firefox/2.0.0.11'
+        headers.update({'User-Agent': ua})
+        params = urlencode(qsdata)
+        if params:
         if '?' in url:
             url = "%s&%s" % (url,params)
         else:
             url = "%s?%s" % (url,params)
-    req = Request(url,postdata,headers)
-    doc = urlopen(req)
-    data = doc.read()
-    soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
-    return soup
+        req = Request(url,postdata,headers)
+        doc = urlopen(req)
+        data = doc.read()
+        soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        return soup
 
     def coffee(self, irc, msg, args):
         """
