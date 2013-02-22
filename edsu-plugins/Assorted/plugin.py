@@ -1030,10 +1030,10 @@ class Assorted(callbacks.Privmsg):
         headers.update({'User-Agent': ua})
         params = urlencode(qsdata)
         if params:
-        if '?' in url:
-            url = "%s&%s" % (url,params)
-        else:
-            url = "%s?%s" % (url,params)
+            if '?' in url:
+                url = "%s&%s" % (url,params)
+            else:
+                url = "%s?%s" % (url,params)
         req = Request(url,postdata,headers)
         doc = urlopen(req)
         data = doc.read()
