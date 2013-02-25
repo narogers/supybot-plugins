@@ -2014,4 +2014,14 @@ class Assorted(callbacks.Privmsg):
     def helperz(self, irc, msg, args, who):
         irc.reply("Translation Party is hiring, you know.")
 
+    def rly(self, irc, msg, args, what):
+        reply = "%s%s?... Really?%s" % (
+            bool(random.getrandbits(1)) and 'Seriously, ' or '',
+            what,
+            bool(random.getrandbits(1)) and '... REALLY?' or ''
+            )
+        irc.reply(reply)
+
+    rly = wrap(rly, ['text'])
+
 Class = Assorted
