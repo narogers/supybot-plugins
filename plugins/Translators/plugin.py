@@ -220,6 +220,7 @@ class Translators(callbacks.Privmsg):
         params = urlencode(dict(input=s,type=type))
         url = 'http://www.cs.utexas.edu/users/jbc/bork/bork.cgi?' + params
         resp = web.getUrl(url, headers=HEADERS)
+        resp = re.sub('&amp(way|emp);','&amp;',resp)
         resp = BS.BeautifulStoneSoup(resp,convertEntities=BS.BeautifulStoneSoup.HTML_ENTITIES).contents[0]
         resp = re.sub('\n', ' ', resp)
         irc.reply(resp.encode('utf-8', 'ignore').strip())
