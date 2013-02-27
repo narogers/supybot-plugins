@@ -14,6 +14,8 @@ import supybot.callbacks as callbacks
 logger = logging.getLogger('supybot')
 html_parser = HTMLParser.HTMLParser()
 
+sites = ["libraries", "digitalpreservation"]
+
 class StackEx(callbacks.Plugin):
     """silly stuff to do with http://libraries.stackexchange.com/
     """
@@ -32,12 +34,13 @@ class StackEx(callbacks.Plugin):
         if now - self.last_request > wait:
             logger.info("looking for new questions since %s" % now)
             irc = callbacks.SimpleProxy(irc, msg)
-            questions = get_questions(self.last_request)
+            for site in sites:
+                questions = get_questions(site, self.last_request)
+                if len(questions) > 0:
+                    n = ["%s - %s" % (q['title'], q['url']) for q in questions]
+                    logger.info("found questions: %s" % n)
+                    irc.reply('[ ' + site + ' stackex] ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
             self.last_request = now
-            if len(questions) > 0:
-                n = ["%s - %s" % (q['title'], q['url']) for q in questions]
-                logger.info("found questions: %s" % n)
-                irc.reply('[library stackexchange] ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
 
     def lastq(self, irc, msg, args):
         """returns the last libraries stack exchange question
@@ -48,11 +51,11 @@ class StackEx(callbacks.Plugin):
 
     lastq = wrap(lastq)
 
-def get_questions(from_date):
+def get_questions(site, from_date):
     new_questions = []
     # all stack exchange api calls return gzipped content
     # kinda sucky that urllib2 doesn't hande gzip :(
-    url = "http://api.stackexchange.com/2.0/questions?order=desc&sort=creation&site=libraries.stackexchange.com&fromdate=%s" % from_date
+    url = "http://api.stackexchange.com/2.0/questions?order=desc&sort=creation&site=%s.stackexchange.com&fromdate=%s" % (site, from_date)
     logger.info("calling stackex api: %s" % url)
     response = urllib2.urlopen(url)
     buf = StringIO(response.read())
