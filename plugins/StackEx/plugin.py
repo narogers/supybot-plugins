@@ -14,12 +14,12 @@ import supybot.callbacks as callbacks
 logger = logging.getLogger('supybot')
 html_parser = HTMLParser.HTMLParser()
 
-sites = ["libraries", "digitalpreservation"]
 
 class StackEx(callbacks.Plugin):
-    """silly stuff to do with http://libraries.stackexchange.com/
+    """silly stuff to do with stackexchange
     """
     threaded = True
+    sites = ["libraries", "digitalpreservation"]
 
     def __init__(self, irc):
         self.__parent = super(StackEx, self)
@@ -34,7 +34,7 @@ class StackEx(callbacks.Plugin):
         if now - self.last_request > wait:
             logger.info("looking for new questions since %s" % now)
             irc = callbacks.SimpleProxy(irc, msg)
-            for site in sites:
+            for site in self.sites:
                 questions = get_questions(site, self.last_request)
                 if len(questions) > 0:
                     n = ["%s - %s" % (q['title'], q['url']) for q in questions]
@@ -46,8 +46,9 @@ class StackEx(callbacks.Plugin):
         """returns the last libraries stack exchange question
         """
         t = int(time.time())
-        q = get_questions(0)[0]
-        irc.reply("%s <%s>" % (q['title'], q['url']))
+        for site in self.sites:
+            q = get_questions(site, 0)[0]
+            irc.reply("[%s stackex] %s <%s>" % (site, q['title'], q['url']))
 
     lastq = wrap(lastq)
 
