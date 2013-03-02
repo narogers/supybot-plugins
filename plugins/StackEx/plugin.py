@@ -39,7 +39,7 @@ class StackEx(callbacks.Plugin):
                 if len(questions) > 0:
                     n = ["%s - %s" % (q['title'], q['url']) for q in questions]
                     logger.info("found questions: %s" % n)
-                    irc.reply('[ ' + site + ' stackex] ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
+                    irc.reply('[' + site + ' stackex] ' + ' ; '.join(n), to='#code4lib', prefixNick=False)
             self.last_request = now
 
     def lastq(self, irc, msg, args):
