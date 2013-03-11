@@ -28,6 +28,7 @@
 
 ###
 
+import supybot.conf as conf
 import supybot.utils as utils
 from supybot.commands import *
 import supybot.plugins as plugins
@@ -202,24 +203,22 @@ class Cast(callbacks.Plugin):
     tmdb = wrap(tmdb, ['channeldb', getopts({'max':'int'}), 'text'])
     
     def _query_freebase(self, work_type, thing):
+      key = conf.get(conf.supybot.plugins.Cast.FreebaseApiKey)
       props = FREEBASE_TYPES[work_type]
-      url = "https://api.freebase.com/api/service/search?query=%s&type=%s" % (web.urlquote(thing),props['type'])
+      url = "https://www.googleapis.com/freebase/v1/search?query=%s&type=%s&key=%s" % (web.urlquote(thing),props['type'],key)
       response = simplejson.loads(web.getUrl(url, headers=HEADERS))
       if len(response['result']) == 0:
         return None
       else:
         fbid = response['result'][0]['id']
         query = {
-          'escape': False,
-          'query': {
             "id": fbid,
             "type": props['type'],
             "name": None,
             "limit": 1
           }
-        }
-        query['query'].update(props['subquery'])
-        url = "https://api.freebase.com/api/service/mqlread?query=%s" % web.urlquote(simplejson.dumps(query))
+        query.update(props['subquery'])
+        url = "https://www.googleapis.com/freebase/v1/mqlread?query=%s&key=%s" % (web.urlquote(simplejson.dumps(query)),key)
         response = simplejson.loads(web.getUrl(url, headers=HEADERS))
         result = response['result']
         if result is None:
