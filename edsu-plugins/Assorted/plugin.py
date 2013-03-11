@@ -1067,7 +1067,7 @@ class Assorted(callbacks.Privmsg):
         soup = self._url2soup('http://ratetea.com/highest_rated_teas.php')
         rows = soup.findAll('tr')[1:]
         teas = [t.a for t in rows]
-        tea = teas[randint(0, len(teas))]
+        tea = teas[randint(0, len(teas)-1)]
         tea_name = tea.string 
         tea_url = "http://ratetea.com" + tea['href']
         if len(args) > 0:
